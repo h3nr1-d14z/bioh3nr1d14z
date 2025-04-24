@@ -24,3 +24,126 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Custom Animations */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-fade-in {
+  animation: fade-in 1s ease both;
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes gradient-x {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradient-x 4s ease-in-out infinite;
+}
+
+@keyframes skill-bar {
+  from { width: 0; }
+  to { width: var(--tw-width, 100%); }
+}
+.animate-skill-bar {
+  animation: skill-bar 1.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Fade Out Animation for Page/Stack Transitions */
+@keyframes fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+.animate-fade-out {
+  animation: fade-out 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* 3D Card Hover Effect */
+.card-3d {
+  perspective: 800px;
+  transform-style: preserve-3d;
+  will-change: transform, box-shadow;
+}
+.card-3d:hover {
+  box-shadow: 0 12px 32px 0 rgba(255, 0, 255, 0.15), 0 2px 8px 0 rgba(0,255,255,0.12);
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+.card-3d:active {
+  transform: scale(0.97);
+}
+.card-3d {
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+
+/* Animated Cursor */
+.animated-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 32px;
+  pointer-events: none;
+  z-index: 9999;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 40%, #0ff 80%, transparent 100%);
+  box-shadow: 0 0 24px 8px #0ff, 0 0 8px 2px #fff;
+  opacity: 0.7;
+  mix-blend-mode: lighten;
+  transform: translate(-50%, -50%);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  box-shadow: 0 0 8px 2px #0ff, 0 0 2px 1px #fff;
+  transform: translate(-50%, -50%);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 36px;
+  height: 36px;
+  border: 2px solid #0ff;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  box-shadow: 0 0 16px 2px #0ff;
+  opacity: 0.5;
+  transform: translate(-50%, -50%);
+  transition: border 0.2s, box-shadow 0.2s, width 0.2s, height 0.2s;
+}
+.cursor-ring-click {
+  width: 48px !important;
+  height: 48px !important;
+  border-width: 4px !important;
+  box-shadow: 0 0 32px 8px #0ff;
+  opacity: 0.7;
+}
+
+/* Hide Scrollbar for Fun Facts Carousel */
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome/Safari/Webkit */
+}
