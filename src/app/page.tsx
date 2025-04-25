@@ -3,6 +3,7 @@
 import ParallaxStars from "../components/ParallaxStars";
 import { FaGithub, FaEnvelope, FaLinkedin } from "react-icons/fa";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
 const stacks = [
   {
@@ -109,9 +110,11 @@ export default function Home() {
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
       <ParallaxStars />
+      {/* Subtle animated noise overlay */}
+      <div className="pointer-events-none fixed inset-0 z-0" style={{background: 'radial-gradient(circle at 50% 50%, rgba(255,255,255,0.02) 0%, rgba(0,0,0,0.08) 100%)', mixBlendMode: 'overlay', animation: 'gradient-x 12s ease-in-out infinite'}} />
       <main className="z-10 flex flex-col items-center justify-center gap-8 py-24 w-full">
         {/* Stack Switcher */}
-        <div className="flex gap-4 mb-4 animate-fade-in-up">
+        <motion.div className="flex gap-4 mb-4" initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{delay:0.1, duration:0.7, type:'spring'}}>
           {stacks.map((s) => (
             <button
               key={s.key}
@@ -121,16 +124,16 @@ export default function Home() {
               {s.label}
             </button>
           ))}
-        </div>
+        </motion.div>
         {/* Hero Section */}
-        <div className="backdrop-blur-md bg-black/30 dark:bg-white/10 rounded-3xl p-10 shadow-2xl border border-white/10 animate-fade-in">
-          <h1 className="text-5xl sm:text-7xl font-extrabold bg-gradient-to-r from-fuchsia-500 via-cyan-400 to-blue-500 bg-clip-text text-transparent drop-shadow-lg animate-gradient-x">
+        <motion.div className="backdrop-blur-md bg-black/30 dark:bg-white/10 rounded-3xl p-10 shadow-2xl border border-white/10" initial={{opacity:0, y:-40}} animate={{opacity:1, y:0}} transition={{duration:0.8, type:'spring'}}>
+          <motion.h1 className="text-5xl sm:text-7xl font-extrabold bg-gradient-to-r from-fuchsia-500 via-cyan-400 to-blue-500 bg-clip-text text-transparent drop-shadow-lg animate-gradient-x" initial={{opacity:0, y:30}} animate={{opacity:1, y:0}} transition={{delay:0.2, duration:0.7}}>
             h3nr1-d14z
-          </h1>
-          <p className="mt-4 text-xl sm:text-2xl text-white/80 dark:text-white/70 font-medium animate-fade-in-up">
+          </motion.h1>
+          <motion.p className="mt-4 text-xl sm:text-2xl text-white/80 dark:text-white/70 font-medium" initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{delay:0.4, duration:0.7}}>
             Creative Coder & UI Enthusiast
-          </p>
-          <div className="flex gap-6 mt-8 justify-center animate-fade-in-up">
+          </motion.p>
+          <motion.div className="flex gap-6 mt-8 justify-center" initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{delay:0.6, duration:0.7}}>
             <a
               href="https://github.com/h3nr1-d14z"
               target="_blank"
@@ -156,59 +159,68 @@ export default function Home() {
             >
               <FaLinkedin className="text-2xl text-white group-hover:rotate-[10deg] transition-transform duration-300" />
             </a>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
         {/* Terminal About Section */}
-        <div className={isTransitioning ? "animate-fade-out" : "animate-fade-in"} key={stack.key + '-about'}>
+        <motion.div className={isTransitioning ? "animate-fade-out" : "animate-fade-in"} key={stack.key + '-about'} initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{delay:0.1}}>
           <TerminalAbout text={stack.about} />
-        </div>
+        </motion.div>
         {/* About Me Section (Skills) */}
-        <div className={isTransitioning ? "animate-fade-out" : "animate-fade-in"} key={stack.key + '-skills'}>
-          <section className="w-full max-w-2xl mt-8 animate-fade-in-up">
+        <motion.div className={isTransitioning ? "animate-fade-out" : "animate-fade-in"} key={stack.key + '-skills'} initial={{opacity:0, y:20}} whileInView={{opacity:1, y:0}} viewport={{once:true, amount:0.2}} transition={{delay:0.1}}>
+          <section className="w-full max-w-2xl mt-8">
             <div className="rounded-2xl bg-gradient-to-br from-cyan-900/60 to-fuchsia-900/40 p-8 shadow-xl border border-white/10 backdrop-blur-md">
               <h2 className="text-3xl font-bold text-white mb-2">Skills</h2>
               <div className="flex flex-wrap gap-4">
                 {stack.skills.map((skill) => (
-                  <span key={skill} className="bg-white/10 rounded-full px-5 py-2 text-white text-lg font-semibold shadow hover:scale-110 transition-transform duration-300">
+                  <motion.span key={skill} whileHover={{scale:1.13, boxShadow:'0 0 16px #0ff'}} className="bg-white/10 rounded-full px-5 py-2 text-white text-lg font-semibold shadow transition-transform duration-300">
                     {skill}
-                  </span>
+                  </motion.span>
                 ))}
               </div>
             </div>
           </section>
-        </div>
+        </motion.div>
         {/* Projects Section */}
-        <div className={isTransitioning ? "animate-fade-out" : "animate-fade-in"} key={stack.key + '-projects'}>
-          <section className="w-full max-w-4xl mt-12 animate-fade-in-up">
+        <motion.div className={isTransitioning ? "animate-fade-out" : "animate-fade-in"} key={stack.key + '-projects'} initial={{opacity:0, y:20}} whileInView={{opacity:1, y:0}} viewport={{once:true, amount:0.2}} transition={{delay:0.1}}>
+          <section className="w-full max-w-4xl mt-12">
             <h2 className="text-3xl font-bold text-white mb-6 text-center">Projects</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
               {stack.projects.map((proj) => (
-                <div
+                <motion.div
                   key={proj.name}
                   className="group bg-gradient-to-br from-fuchsia-800/60 to-cyan-800/40 rounded-2xl p-6 shadow-lg border border-white/10 transition-all duration-300 hover:shadow-3xl hover:scale-105 card-3d"
                   onMouseMove={handleCardMouseMove}
                   onMouseLeave={handleCardMouseLeave}
+                  whileHover={{scale:1.07, boxShadow:'0 8px 32px 0 rgba(0,255,255,0.18)'}}
                 >
                   <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-fuchsia-400 transition-colors">{proj.name}</h3>
                   <p className="text-white/70 mb-2">{proj.desc}</p>
                   <a href="#" className="text-cyan-300 hover:underline">View Project →</a>
-                </div>
+                </motion.div>
               ))}
             </div>
           </section>
-        </div>
+        </motion.div>
         {/* Fun Facts Marquee Section */}
-        <section className="w-full max-w-2xl mt-12 animate-fade-in-up">
+        <motion.section className="w-full max-w-2xl mt-12" initial={{opacity:0, y:20}} whileInView={{opacity:1, y:0}} viewport={{once:true, amount:0.2}} transition={{delay:0.1}}>
           <h2 className="text-3xl font-bold text-white mb-6 text-center">Fun Facts</h2>
-          <div className="relative w-full overflow-hidden">
-            <div className="marquee flex gap-8" style={{animation: 'marquee 18s linear infinite'}}>
+          <div className="relative w-full overflow-hidden group">
+            <motion.div
+              className="marquee flex gap-8"
+              style={{animation: 'marquee 18s linear infinite'}}
+              whileHover={{animationPlayState: 'paused'}}
+            >
               {stack.funFacts.concat(stack.funFacts).map((fact, i) => (
-                <div key={i} className="min-w-[220px] flex items-center gap-2 bg-gradient-to-br from-fuchsia-700/80 to-cyan-700/60 rounded-xl px-6 py-4 text-white text-lg font-semibold shadow-lg border border-white/10 animate-fade-in-up hover:scale-105 transition-transform duration-300">
-                  <span className="text-2xl">{fact.emoji}</span>
+                <motion.div
+                  key={i}
+                  className="min-w-[220px] flex items-center gap-2 bg-gradient-to-br from-fuchsia-700/80 to-cyan-700/60 rounded-xl px-6 py-4 text-white text-lg font-semibold shadow-lg border border-white/10 hover:scale-105 transition-transform duration-300"
+                  whileHover={{scale:1.12, rotate:2}}
+                >
+                  <motion.span animate={{rotate:[0,10,-10,0], scale:[1,1.2,1]}} transition={{repeat:Infinity, duration:2, delay:i*0.1}} className="text-2xl">{fact.emoji}</motion.span>
                   <span>{fact.text}</span>
-                </div>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
             <style>{`
               @keyframes marquee {
                 0% { transform: translateX(0); }
@@ -216,20 +228,20 @@ export default function Home() {
               }
             `}</style>
           </div>
-        </section>
+        </motion.section>
         {/* Tech Stack Section */}
-        <section className="w-full max-w-2xl mt-16 animate-fade-in-up">
+        <motion.section className="w-full max-w-2xl mt-16" initial={{opacity:0, y:20}} whileInView={{opacity:1, y:0}} viewport={{once:true, amount:0.2}} transition={{delay:0.1}}>
           <h2 className="text-3xl font-bold text-white mb-6 text-center">Tech Stack</h2>
           <div className="flex flex-wrap gap-6 justify-center">
-            <span className="bg-white/10 rounded-full px-5 py-2 text-white text-lg font-semibold shadow hover:scale-110 transition-transform duration-300">React</span>
-            <span className="bg-white/10 rounded-full px-5 py-2 text-white text-lg font-semibold shadow hover:scale-110 transition-transform duration-300">Next.js</span>
-            <span className="bg-white/10 rounded-full px-5 py-2 text-white text-lg font-semibold shadow hover:scale-110 transition-transform duration-300">TypeScript</span>
-            <span className="bg-white/10 rounded-full px-5 py-2 text-white text-lg font-semibold shadow hover:scale-110 transition-transform duration-300">TailwindCSS</span>
-            <span className="bg-white/10 rounded-full px-5 py-2 text-white text-lg font-semibold shadow hover:scale-110 transition-transform duration-300">shadcn/ui</span>
+            <motion.span whileHover={{scale:1.13, boxShadow:'0 0 16px #0ff'}} className="bg-white/10 rounded-full px-5 py-2 text-white text-lg font-semibold shadow transition-transform duration-300">React</motion.span>
+            <motion.span whileHover={{scale:1.13, boxShadow:'0 0 16px #0ff'}} className="bg-white/10 rounded-full px-5 py-2 text-white text-lg font-semibold shadow transition-transform duration-300">Next.js</motion.span>
+            <motion.span whileHover={{scale:1.13, boxShadow:'0 0 16px #0ff'}} className="bg-white/10 rounded-full px-5 py-2 text-white text-lg font-semibold shadow transition-transform duration-300">TypeScript</motion.span>
+            <motion.span whileHover={{scale:1.13, boxShadow:'0 0 16px #0ff'}} className="bg-white/10 rounded-full px-5 py-2 text-white text-lg font-semibold shadow transition-transform duration-300">TailwindCSS</motion.span>
+            <motion.span whileHover={{scale:1.13, boxShadow:'0 0 16px #0ff'}} className="bg-white/10 rounded-full px-5 py-2 text-white text-lg font-semibold shadow transition-transform duration-300">shadcn/ui</motion.span>
           </div>
-        </section>
+        </motion.section>
         {/* Timeline Section */}
-        <section className="w-full max-w-2xl mt-16 animate-fade-in-up">
+        <motion.section className="w-full max-w-2xl mt-16" initial={{opacity:0, y:20}} whileInView={{opacity:1, y:0}} viewport={{once:true, amount:0.2}} transition={{delay:0.1}}>
           <h2 className="text-3xl font-bold text-white mb-6 text-center">My Coding Journey</h2>
           <ol className="relative border-l-2 border-fuchsia-500/40 ml-4">
             <li className="mb-10 ml-6">
@@ -253,15 +265,15 @@ export default function Home() {
               <p className="text-white/70">Always learning, always building, always sharing.</p>
             </li>
           </ol>
-        </section>
+        </motion.section>
         {/* Contact Section */}
-        <section className="w-full max-w-xl mt-16 animate-fade-in-up mb-24">
+        <motion.section className="w-full max-w-xl mt-16 mb-24" initial={{opacity:0, y:20}} whileInView={{opacity:1, y:0}} viewport={{once:true, amount:0.2}} transition={{delay:0.1}}>
           <div className="rounded-2xl bg-gradient-to-br from-cyan-900/60 to-fuchsia-900/40 p-8 shadow-xl border border-white/10 backdrop-blur-md flex flex-col items-center">
             <h2 className="text-3xl font-bold text-white mb-2">Contact</h2>
             <p className="text-white/80 mb-4 text-center">Want to collaborate or just say hi? Reach out to me!</p>
-            <a href="mailto:your@email.com" className="px-8 py-3 rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-400 text-white font-bold text-lg shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-300 animate-bounce">Say Hello</a>
+            <motion.a whileHover={{scale:1.09, boxShadow:'0 0 32px #0ff'}} href="mailto:your@email.com" className="px-8 py-3 rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-400 text-white font-bold text-lg shadow-xl hover:scale-105 hover:shadow-2xl transition-all duration-300 animate-bounce">Say Hello</motion.a>
           </div>
-        </section>
+        </motion.section>
       </main>
     </div>
   );
