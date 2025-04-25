@@ -1,7 +1,7 @@
 'use client';
 
 import ParallaxStars from "../components/ParallaxStars";
-import { FaGithub, FaEnvelope, FaLinkedin } from "react-icons/fa";
+import { FaGithub, FaEnvelope, FaFacebook } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
@@ -13,8 +13,8 @@ const stacks = [
     about: `Fresher DevOps engineer passionate about automation, CI/CD, and cloud infrastructure. I love building reliable pipelines and learning new tools!`,
     skills: ["Linux", "Docker", "CI/CD", "GitHub Actions", "Cloud"],
     projects: [
-      { name: "Infra Monitor", desc: "A dashboard for server health & deploys." },
-      { name: "Auto Deploy", desc: "CI/CD pipeline for web apps." },
+      { name: "Unity Jenkins Pipeline", desc: "A jenkins pipelnie for building Unity games.", href: "" },
+      { name: "Auto Deploy", desc: "CI/CD pipeline for web apps.", href: "" },
     ],
     funFacts: [
       { emoji: "🔧", text: "I script everything!" },
@@ -29,8 +29,8 @@ const stacks = [
     about: `Full stack web dev learner, building beautiful, interactive apps with React, Next.js, and modern UI/UX.`,
     skills: ["React", "Next.js", "TypeScript", "TailwindCSS", "UI/UX"],
     projects: [
-      { name: "Awesome Portfolio", desc: "Animated, modern portfolio site." },
-      { name: "UI Playground", desc: "Creative UI components & effects." },
+      { name: "Awesome Portfolio", desc: "Animated, modern portfolio site.", href: "https://github.com/h3nr1-d14z/bioh3nr1d14z" },
+      { name: "ITPTIT Wiki", desc: "A member database website (Under development).", href: "https://github.com/h3nr1-d14z/itptit-wiki" },
     ],
     funFacts: [
       { emoji: "🎨", text: "Design + code fan." },
@@ -45,13 +45,13 @@ const stacks = [
     about: `Unity game dev enthusiast, experimenting with gameplay, effects, and interactive worlds.`,
     skills: ["Unity", "C#", "Game Design", "2D/3D", "VFX"],
     projects: [
-      { name: "Mini Platformer", desc: "A Unity WebGL platform game." },
-      { name: "VFX Lab", desc: "Showcase of custom Unity effects." },
+      { name: "Pixel3D", desc: "A painting pixel Unity game.", href: "https://github.com/h3nr1-d14z/BasePixel3D" },
+      { name: "Soundclound", desc: "Showcase of my music.", href: "https://soundcloud.com/ktflunazamora" },
     ],
     funFacts: [
-      { emoji: "🎮", text: "Built my own game engine!" },
+      { emoji: "🎵", text: "Music lover :3" },
       { emoji: "🕹️", text: "Game jam fan." },
-      { emoji: "🌌", text: "Sci-fi lover." }
+      { emoji: "🌌", text: "Large game pool." }
     ]
   },
 ];
@@ -131,7 +131,7 @@ export default function Home() {
             h3nr1-d14z
           </motion.h1>
           <motion.p className="mt-4 text-xl sm:text-2xl text-white/80 dark:text-white/70 font-medium" initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{delay:0.4, duration:0.7}}>
-            Creative Coder & UI Enthusiast
+            Creative Coder & UI/UX Enthusiast
           </motion.p>
           <motion.div className="flex gap-6 mt-8 justify-center" initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{delay:0.6, duration:0.7}}>
             <a
@@ -151,13 +151,13 @@ export default function Home() {
               <FaEnvelope className="text-2xl text-white group-hover:rotate-[-15deg] transition-transform duration-300" />
             </a>
             <a
-              href="https://linkedin.com/in/yourprofile"
+              href="https://facebook.com/ktflunazamora"
               target="_blank"
               rel="noopener noreferrer"
               className="group rounded-full bg-gradient-to-r from-blue-500 to-fuchsia-500 p-1.5 shadow-lg hover:scale-110 transition-transform duration-300"
-              aria-label="LinkedIn"
+              aria-label="Facebook"
             >
-              <FaLinkedin className="text-2xl text-white group-hover:rotate-[10deg] transition-transform duration-300" />
+              <FaFacebook className="text-2xl text-white group-hover:rotate-[10deg] transition-transform duration-300" />
             </a>
           </motion.div>
         </motion.div>
@@ -195,7 +195,7 @@ export default function Home() {
                 >
                   <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-fuchsia-400 transition-colors">{proj.name}</h3>
                   <p className="text-white/70 mb-2">{proj.desc}</p>
-                  <a href="#" className="text-cyan-300 hover:underline">View Project →</a>
+                  <a href={proj.href} target="_blank" rel="noopener noreferrer" className="text-cyan-300 hover:underline">View Project →</a>
                 </motion.div>
               ))}
             </div>
@@ -204,19 +204,19 @@ export default function Home() {
         {/* Fun Facts Marquee Section */}
         <motion.section className="w-full max-w-2xl mt-12" initial={{opacity:0, y:20}} whileInView={{opacity:1, y:0}} viewport={{once:true, amount:0.2}} transition={{delay:0.1}}>
           <h2 className="text-3xl font-bold text-white mb-6 text-center">Fun Facts</h2>
-          <div className="relative w-full overflow-hidden group">
+          <div className="relative w-full flex justify-center overflow-hidden group py-10 px-10">
             <motion.div
               className="marquee flex gap-8"
-              style={{animation: 'marquee 18s linear infinite'}}
+              style={{animation: 'marquee 18s linear infinite', maxWidth: '900px'}}
               whileHover={{animationPlayState: 'paused'}}
             >
               {stack.funFacts.concat(stack.funFacts).map((fact, i) => (
                 <motion.div
                   key={i}
-                  className="min-w-[220px] flex items-center gap-2 bg-gradient-to-br from-fuchsia-700/80 to-cyan-700/60 rounded-xl px-6 py-4 text-white text-lg font-semibold shadow-lg border border-white/10 hover:scale-105 transition-transform duration-300"
-                  whileHover={{scale:1.12, rotate:2}}
+                  className="min-w-[180px] max-w-[260px] flex items-center gap-2 bg-gradient-to-br from-fuchsia-700/80 to-cyan-700/60 rounded-xl px-6 py-4 text-white text-base font-semibold shadow-lg border border-white/10 hover:z-10 transition-transform duration-300"
+                  whileHover={{scale:1.15, zIndex: 20, boxShadow: '0 4px 32px 0 #0ff'}}
                 >
-                  <motion.span animate={{rotate:[0,10,-10,0], scale:[1,1.2,1]}} transition={{repeat:Infinity, duration:2, delay:i*0.1}} className="text-2xl">{fact.emoji}</motion.span>
+                  <motion.span animate={{rotate:[0,10,-10,0], scale:[1,1.2,1]}} transition={{repeat:Infinity, duration:2, delay:i*0.1}} className="text-xl">{fact.emoji}</motion.span>
                   <span>{fact.text}</span>
                 </motion.div>
               ))}
@@ -233,11 +233,14 @@ export default function Home() {
         <motion.section className="w-full max-w-2xl mt-16" initial={{opacity:0, y:20}} whileInView={{opacity:1, y:0}} viewport={{once:true, amount:0.2}} transition={{delay:0.1}}>
           <h2 className="text-3xl font-bold text-white mb-6 text-center">Tech Stack</h2>
           <div className="flex flex-wrap gap-6 justify-center">
-            <motion.span whileHover={{scale:1.13, boxShadow:'0 0 16px #0ff'}} className="bg-white/10 rounded-full px-5 py-2 text-white text-lg font-semibold shadow transition-transform duration-300">React</motion.span>
-            <motion.span whileHover={{scale:1.13, boxShadow:'0 0 16px #0ff'}} className="bg-white/10 rounded-full px-5 py-2 text-white text-lg font-semibold shadow transition-transform duration-300">Next.js</motion.span>
+            <motion.span whileHover={{scale:1.13, boxShadow:'0 0 16px #0ff'}} className="bg-white/10 rounded-full px-5 py-2 text-white text-lg font-semibold shadow transition-transform duration-300">Groovy</motion.span>
+            <motion.span whileHover={{scale:1.13, boxShadow:'0 0 16px #0ff'}} className="bg-white/10 rounded-full px-5 py-2 text-white text-lg font-semibold shadow transition-transform duration-300">NextJS</motion.span>
+            <motion.span whileHover={{scale:1.13, boxShadow:'0 0 16px #0ff'}} className="bg-white/10 rounded-full px-5 py-2 text-white text-lg font-semibold shadow transition-transform duration-300">NodeJS</motion.span>
             <motion.span whileHover={{scale:1.13, boxShadow:'0 0 16px #0ff'}} className="bg-white/10 rounded-full px-5 py-2 text-white text-lg font-semibold shadow transition-transform duration-300">TypeScript</motion.span>
             <motion.span whileHover={{scale:1.13, boxShadow:'0 0 16px #0ff'}} className="bg-white/10 rounded-full px-5 py-2 text-white text-lg font-semibold shadow transition-transform duration-300">TailwindCSS</motion.span>
             <motion.span whileHover={{scale:1.13, boxShadow:'0 0 16px #0ff'}} className="bg-white/10 rounded-full px-5 py-2 text-white text-lg font-semibold shadow transition-transform duration-300">shadcn/ui</motion.span>
+            <motion.span whileHover={{scale:1.13, boxShadow:'0 0 16px #0ff'}} className="bg-white/10 rounded-full px-5 py-2 text-white text-lg font-semibold shadow transition-transform duration-300">Unity</motion.span>
+            <motion.span whileHover={{scale:1.13, boxShadow:'0 0 16px #0ff'}} className="bg-white/10 rounded-full px-5 py-2 text-white text-lg font-semibold shadow transition-transform duration-300">Flask</motion.span>
           </div>
         </motion.section>
         {/* Timeline Section */}
@@ -251,13 +254,23 @@ export default function Home() {
             </li>
             <li className="mb-10 ml-6">
               <span className="absolute flex items-center justify-center w-6 h-6 bg-cyan-400 rounded-full -left-3 ring-8 ring-cyan-400/20 animate-bounce" />
-              <h3 className="font-bold text-white">2018: Discovered React</h3>
-              <p className="text-white/70">Fell in love with component-based UI and interactivity.</p>
+              <h3 className="font-bold text-white">2017: Tried myself out with Game Development</h3>
+              <p className="text-white/70">Took my first step on how to create a game on Unity.</p>
             </li>
             <li className="mb-10 ml-6">
               <span className="absolute flex items-center justify-center w-6 h-6 bg-blue-500 rounded-full -left-3 ring-8 ring-blue-500/20 animate-bounce" />
-              <h3 className="font-bold text-white">2022: Next.js & UI Mastery</h3>
-              <p className="text-white/70">Built advanced, animated sites and started sharing open source UI ideas.</p>
+              <h3 className="font-bold text-white">2022: Got into college: PTIT</h3>
+              <p className="text-white/70">Gained a deeper insight into how to code efficiently.</p>
+            </li>
+            <li className="mb-10 ml-6">
+              <span className="absolute flex items-center justify-center w-6 h-6 bg-blue-500 rounded-full -left-3 ring-8 ring-blue-500/20 animate-bounce" />
+              <h3 className="font-bold text-white">2023: Had my first internship opportunity at GPlay.</h3>
+              <p className="text-white/70">This is where I truly experienced how to create a commercial game.</p>
+            </li>
+            <li className="mb-10 ml-6">
+              <span className="absolute flex items-center justify-center w-6 h-6 bg-blue-500 rounded-full -left-3 ring-8 ring-blue-500/20 animate-bounce" />
+              <h3 className="font-bold text-white">2024: Started working at TheOne Game Studio</h3>
+              <p className="text-white/70">Began my journey in Game DevOps.</p>
             </li>
             <li className="ml-6">
               <span className="absolute flex items-center justify-center w-6 h-6 bg-gradient-to-r from-fuchsia-500 to-cyan-400 rounded-full -left-3 ring-8 ring-fuchsia-500/20 animate-bounce" />
