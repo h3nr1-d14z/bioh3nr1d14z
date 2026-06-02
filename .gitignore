@@ -45,6 +45,7 @@ lerna-debug.log*
 
 # local
 *.local
+.dev.vars
 
 # typescript
 *.tsbuildinfo

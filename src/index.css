@@ -212,12 +212,13 @@
 
 .hero__subtitle {
   font-family: 'Geist Mono', monospace;
-  font-size: 15px;
-  color: #777777;
-  max-width: 560px;
-  line-height: 1.6;
+  font-size: 16px;
+  color: #aaaaaa;
+  max-width: 600px;
+  line-height: 1.7;
   margin-bottom: 40px;
   padding: 0 20px;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.85);
 }
 
 .hero__cta {
@@ -687,9 +688,14 @@
   align-self: flex-start;
 }
 
-.contact__submit:hover {
+.contact__submit:hover:not(:disabled) {
   background: #D4AF37;
   color: #1c1c1c;
+}
+
+.contact__submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Footer */

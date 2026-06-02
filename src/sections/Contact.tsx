@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { toast } from 'sonner';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -9,6 +10,7 @@ export default function Contact() {
   const leftRef = useRef<HTMLDivElement>(null);
   const rightRef = useRef<HTMLDivElement>(null);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -43,11 +45,32 @@ export default function Contact() {
     };
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Placeholder - no backend
-    alert('Message transmission simulated. No backend connected.');
-    setFormData({ name: '', email: '', message: '' });
+    setIsSubmitting(true);
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to send message');
+      }
+
+      toast.success('Message transmitted to Discord!', {
+        description: 'I will get back to you soon.',
+      });
+      setFormData({ name: '', email: '', message: '' });
+    } catch {
+      toast.error('Transmission failed.', {
+        description: 'Please try again or reach out via socials.',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -102,8 +125,8 @@ export default function Contact() {
               onChange={(e) => setFormData({ ...formData, message: e.target.value })}
               required
             />
-            <button type="submit" className="contact__submit">
-              TRANSMIT
+            <button type="submit" className="contact__submit" disabled={isSubmitting}>
+              {isSubmitting ? 'TRANSMITTING...' : 'TRANSMIT'}
             </button>
           </form>
         </div>
