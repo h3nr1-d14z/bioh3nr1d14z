@@ -43,7 +43,7 @@ const COMMANDS: Record<string, string[]> = {
   ],
   contact: [
     'Contact:',
-    '  Email:     h3nr1.d14z@example.com',
+    '  Email:     leduchieu101@gmail.com',
     '  Location:  Hanoi, Vietnam',
     '  Discord:   h3nr1.d14z',
   ],

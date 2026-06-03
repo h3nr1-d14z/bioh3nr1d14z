@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import TiltCard from '../components/TiltCard';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -102,18 +103,20 @@ export default function SkillsMatrix() {
 
       <div ref={gridRef} className="skills__grid">
         {filteredSkills.map(skill => (
-          <div key={skill.name} className="skills__card">
-            <div className="skills__card-header">
-              <span className="skills__name">{skill.name}</span>
-              <span className="skills__level">{skill.level}%</span>
+          <TiltCard key={skill.name} className="skills__card-wrap">
+            <div className="skills__card">
+              <div className="skills__card-header">
+                <span className="skills__name">{skill.name}</span>
+                <span className="skills__level">{skill.level}%</span>
+              </div>
+              <div className="skills__bar-bg">
+                <div
+                  className="skills__bar-fill"
+                  style={{ width: `${skill.level}%` }}
+                />
+              </div>
             </div>
-            <div className="skills__bar-bg">
-              <div
-                className="skills__bar-fill"
-                style={{ width: `${skill.level}%` }}
-              />
-            </div>
-          </div>
+          </TiltCard>
         ))}
       </div>
     </section>

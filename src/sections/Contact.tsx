@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { toast } from 'sonner';
+import { Copy, Check } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -11,6 +12,8 @@ export default function Contact() {
   const rightRef = useRef<HTMLDivElement>(null);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const email = 'leduchieu101@gmail.com';
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -73,6 +76,17 @@ export default function Contact() {
     }
   };
 
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(email);
+      setCopied(true);
+      toast.success('Email copied to clipboard');
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error('Failed to copy email');
+    }
+  };
+
   return (
     <section ref={sectionRef} className="contact" id="contact">
       <div className="contact__grid">
@@ -81,6 +95,17 @@ export default function Contact() {
           <p className="contact__body">
             Got a system that needs building, a network that needs securing, or a game that needs modding? Let&apos;s talk.
           </p>
+          <div className="contact__email-row">
+            <span className="contact__email">{email}</span>
+            <button
+              type="button"
+              className="contact__copy-btn"
+              onClick={handleCopyEmail}
+              title="Copy email"
+            >
+              {copied ? <Check size={16} /> : <Copy size={16} />}
+            </button>
+          </div>
           <div className="contact__socials">
             <a
               href="https://github.com/h3nr1-d14z"

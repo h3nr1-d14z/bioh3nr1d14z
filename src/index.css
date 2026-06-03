@@ -1253,3 +1253,53 @@
 .visitor-counter {
   transition: opacity 0.3s ease-out;
 }
+
+/* Contact copy button */
+.contact__email-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.contact__email {
+  font-family: 'Geist Mono', monospace;
+  font-size: 14px;
+  color: #1c1c1c;
+  font-weight: 500;
+}
+
+.contact__copy-btn {
+  background: transparent;
+  border: 1px solid #cccccc;
+  color: #555555;
+  padding: 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contact__copy-btn:hover {
+  border-color: #D4AF37;
+  color: #D4AF37;
+}
+
+/* Tilt card wrappers */
+.github__card-wrap {
+  display: flex;
+}
+
+.github__card-wrap .github__card {
+  flex: 1;
+}
+
+.skills__card-wrap {
+  display: flex;
+}
+
+.skills__card-wrap .skills__card {
+  flex: 1;
+}

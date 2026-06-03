@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Github, Star, GitFork, ExternalLink } from 'lucide-react';
+import TiltCard from '../components/TiltCard';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -127,34 +128,35 @@ export default function GitHubActivity() {
 
       <div className="github__grid">
         {repos.map(repo => (
-          <a
-            key={repo.name}
-            href={repo.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="github__card"
-          >
-            <div className="github__card-header">
-              <span className="github__repo-name">{repo.name}</span>
-              <ExternalLink size={16} className="github__icon" />
-            </div>
-            <p className="github__desc">{repo.description}</p>
-            <div className="github__meta">
-              <span className="github__lang">
-                <span
-                  className="github__lang-dot"
-                  style={{ backgroundColor: langColors[repo.language] || '#888' }}
-                />
-                {repo.language}
-              </span>
-              <span className="github__stat">
-                <Star size={14} /> {repo.stars}
-              </span>
-              <span className="github__stat">
-                <GitFork size={14} /> {repo.forks}
-              </span>
-            </div>
-          </a>
+          <TiltCard key={repo.name} className="github__card-wrap">
+            <a
+              href={repo.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="github__card"
+            >
+              <div className="github__card-header">
+                <span className="github__repo-name">{repo.name}</span>
+                <ExternalLink size={16} className="github__icon" />
+              </div>
+              <p className="github__desc">{repo.description}</p>
+              <div className="github__meta">
+                <span className="github__lang">
+                  <span
+                    className="github__lang-dot"
+                    style={{ backgroundColor: langColors[repo.language] || '#888' }}
+                  />
+                  {repo.language}
+                </span>
+                <span className="github__stat">
+                  <Star size={14} /> {repo.stars}
+                </span>
+                <span className="github__stat">
+                  <GitFork size={14} /> {repo.forks}
+                </span>
+              </div>
+            </a>
+          </TiltCard>
         ))}
       </div>
     </section>

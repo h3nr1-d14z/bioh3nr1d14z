@@ -1,7 +1,6 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, lazy, Suspense } from 'react';
 import Preloader from './sections/Preloader';
 import Navigation from './sections/Navigation';
-import Hero from './sections/Hero';
 import Carousel from './sections/Carousel';
 import PerspectiveText from './sections/PerspectiveText';
 import ParallaxReveal from './sections/ParallaxReveal';
@@ -13,6 +12,12 @@ import ScrollProgress from './components/ScrollProgress';
 import BackToTop from './components/BackToTop';
 import TerminalOverlay from './components/TerminalOverlay';
 import VisitorCounter from './components/VisitorCounter';
+
+const Hero = lazy(() => import('./sections/Hero'));
+
+function HeroFallback() {
+  return <div style={{ height: '100vh', background: '#1c1c1c' }} />;
+}
 
 export default function App() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -27,7 +32,9 @@ export default function App() {
       <Preloader onComplete={handlePreloaderComplete} />
       <Navigation />
       <main>
-        <Hero isReady={isLoaded} />
+        <Suspense fallback={<HeroFallback />}>
+          <Hero isReady={isLoaded} />
+        </Suspense>
         <Carousel />
         <PerspectiveText />
         <ParallaxReveal />
