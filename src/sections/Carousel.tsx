@@ -1,22 +1,18 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { projects } from '../data/projects';
+import type { Project } from '../data/projects';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const projects = [
-  { name: 'nat-gate', image: '/images/img-3.jpg' },
-  { name: 'ai-redteam-toolkit', image: '/images/img-1.jpg' },
-  { name: 'OmniGraph', image: '/images/img-2.jpg' },
-  { name: 'codeforces-minecraft', image: '/images/img-4.jpg' },
-  { name: 'memviz', image: '/images/img-5.jpg' },
-  { name: 'messenger-desktop', image: '/images/img-6.jpg' },
-];
-
-// Duplicate for 12 total (4 per column x 3 columns)
 const allProjects = [...projects, ...projects];
 
-export default function Carousel() {
+interface CarouselProps {
+  onProjectClick?: (project: Project) => void;
+}
+
+export default function Carousel({ onProjectClick }: CarouselProps) {
   const wrapperRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const trackRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -118,7 +114,19 @@ export default function Carousel() {
             <div key={colIdx} className="carousel__col">
               <div ref={setTrackRef(colIdx)} className="carousel__track">
                 {col.map((p, i) => (
-                  <div key={i} className="carousel__card">
+                  <div
+                    key={i}
+                    className="carousel__card"
+                    onClick={() => onProjectClick?.(p)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        onProjectClick?.(p);
+                      }
+                    }}
+                  >
                     <div
                       className="carousel__image"
                       style={{ backgroundImage: `url(${p.image})` }}
@@ -138,7 +146,19 @@ export default function Carousel() {
           FEATURED SYSTEMS
         </h2>
         {projects.map((p, i) => (
-          <div key={`mobile-${i}`} className="carousel__mobile-card">
+          <div
+            key={`mobile-${i}`}
+            className="carousel__mobile-card"
+            onClick={() => onProjectClick?.(p)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onProjectClick?.(p);
+              }
+            }}
+          >
             <img className="carousel__mobile-image" src={p.image} alt={p.name} />
             <div className="carousel__mobile-info">
               <div className="carousel__mobile-title">{p.name}</div>

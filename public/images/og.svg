@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1c1c1c"/>
+      <stop offset="100%" stop-color="#0a0a0a"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#B8941F"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#D4AF37" stroke-width="0.5" opacity="0.08"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <!-- Decorative geometric elements -->
+  <polygon points="100,100 130,150 70,150" fill="none" stroke="#D4AF37" stroke-width="1" opacity="0.3"/>
+  <polygon points="1100,500 1130,550 1070,550" fill="none" stroke="#D4AF37" stroke-width="1" opacity="0.3"/>
+  <circle cx="200" cy="500" r="60" fill="none" stroke="#D4AF37" stroke-width="0.5" opacity="0.15"/>
+  <circle cx="1000" cy="150" r="80" fill="none" stroke="#D4AF37" stroke-width="0.5" opacity="0.15"/>
+  <line x1="0" y1="315" x2="1200" y2="315" stroke="#D4AF37" stroke-width="0.5" opacity="0.1"/>
+  <line x1="600" y1="0" x2="600" y2="630" stroke="#D4AF37" stroke-width="0.5" opacity="0.1"/>
+
+  <!-- Terminal window decoration -->
+  <rect x="80" y="80" width="300" height="180" rx="8" fill="none" stroke="#D4AF37" stroke-width="1" opacity="0.2"/>
+  <rect x="80" y="80" width="300" height="24" rx="8" fill="#D4AF37" opacity="0.1"/>
+  <circle cx="96" cy="92" r="4" fill="#D4AF37" opacity="0.3"/>
+  <circle cx="110" cy="92" r="4" fill="#D4AF37" opacity="0.3"/>
+  <circle cx="124" cy="92" r="4" fill="#D4AF37" opacity="0.3"/>
+  <text x="96" y="160" font-family="'Geist Mono', 'Courier New', monospace" font-size="14" fill="#D4AF37" opacity="0.4">$ whoami</text>
+  <text x="96" y="185" font-family="'Geist Mono', 'Courier New', monospace" font-size="12" fill="#ffffff" opacity="0.5">h3nr1.d14z / Luna Zamora</text>
+  <text x="96" y="205" font-family="'Geist Mono', 'Courier New', monospace" font-size="12" fill="#ffffff" opacity="0.4">Game Dev · Full-Stack · DevOps</text>
+  <text x="96" y="235" font-family="'Geist Mono', 'Courier New', monospace" font-size="14" fill="#D4AF37" opacity="0.4">$ _</text>
+
+  <!-- Main content area -->
+  <g transform="translate(600, 315)">
+    <!-- Central geometric shape (icosahedron wireframe hint) -->
+    <polygon points="0,-120 104,-40 64,80 -64,80 -104,-40" fill="none" stroke="#D4AF37" stroke-width="1.5" opacity="0.25"/>
+    <polygon points="0,-120 104,-40 0,40 -104,-40" fill="none" stroke="#D4AF37" stroke-width="0.8" opacity="0.15"/>
+    <polygon points="104,-40 64,80 0,40" fill="none" stroke="#D4AF37" stroke-width="0.8" opacity="0.15"/>
+    <polygon points="-104,-40 -64,80 0,40" fill="none" stroke="#D4AF37" stroke-width="0.8" opacity="0.15"/>
+    <polygon points="64,80 -64,80 0,40" fill="none" stroke="#D4AF37" stroke-width="0.8" opacity="0.15"/>
+    <circle cx="0" cy="0" r="8" fill="#D4AF37" opacity="0.6" filter="url(#glow)"/>
+
+    <!-- Brand name -->
+    <text y="60" font-family="'Geist Mono', 'Courier New', monospace" font-size="72" font-weight="700" fill="url(#gold)" text-anchor="middle" letter-spacing="0.08em" filter="url(#glow)">h3nr1.d14z</text>
+
+    <!-- Tagline -->
+    <text y="110" font-family="'Geist Mono', 'Courier New', monospace" font-size="22" fill="#aaaaaa" text-anchor="middle" letter-spacing="0.15em">GAME DEV · FULL-STACK · DEVOPS</text>
+
+    <!-- Location line -->
+    <text y="150" font-family="'Geist Mono', 'Courier New', monospace" font-size="14" fill="#666666" text-anchor="middle" letter-spacing="0.1em">HANOI, VIETNAM</text>
+  </g>
+
+  <!-- Bottom decorative bar -->
+  <rect x="450" y="580" width="300" height="2" fill="#D4AF37" opacity="0.4"/>
+  <rect x="500" y="590" width="200" height="1" fill="#D4AF37" opacity="0.2"/>
+
+  <!-- Corner accents -->
+  <path d="M 20 20 L 20 60 M 20 20 L 60 20" fill="none" stroke="#D4AF37" stroke-width="1.5" opacity="0.3"/>
+  <path d="M 1180 20 L 1180 60 M 1180 20 L 1140 20" fill="none" stroke="#D4AF37" stroke-width="1.5" opacity="0.3"/>
+  <path d="M 20 610 L 20 570 M 20 610 L 60 610" fill="none" stroke="#D4AF37" stroke-width="1.5" opacity="0.3"/>
+  <path d="M 1180 610 L 1180 570 M 1180 610 L 1140 610" fill="none" stroke="#D4AF37" stroke-width="1.5" opacity="0.3"/>
+</svg>

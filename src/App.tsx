@@ -12,6 +12,8 @@ import ScrollProgress from './components/ScrollProgress';
 import BackToTop from './components/BackToTop';
 import TerminalOverlay from './components/TerminalOverlay';
 import VisitorCounter from './components/VisitorCounter';
+import ProjectModal from './components/ProjectModal';
+import type { Project } from './data/projects';
 
 const Hero = lazy(() => import('./sections/Hero'));
 
@@ -21,9 +23,18 @@ function HeroFallback() {
 
 export default function App() {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [activeProject, setActiveProject] = useState<Project | null>(null);
 
   const handlePreloaderComplete = useCallback(() => {
     setIsLoaded(true);
+  }, []);
+
+  const openProject = useCallback((project: Project) => {
+    setActiveProject(project);
+  }, []);
+
+  const closeProject = useCallback(() => {
+    setActiveProject(null);
   }, []);
 
   return (
@@ -35,9 +46,9 @@ export default function App() {
         <Suspense fallback={<HeroFallback />}>
           <Hero isReady={isLoaded} />
         </Suspense>
-        <Carousel />
+        <Carousel onProjectClick={openProject} />
         <PerspectiveText />
-        <ParallaxReveal />
+        <ParallaxReveal onProjectClick={openProject} />
         <SkillsMatrix />
         <GitHubActivity />
         <Contact />
@@ -46,6 +57,7 @@ export default function App() {
       <BackToTop />
       <TerminalOverlay />
       <VisitorCounter />
+      <ProjectModal project={activeProject} onClose={closeProject} />
     </>
   );
 }

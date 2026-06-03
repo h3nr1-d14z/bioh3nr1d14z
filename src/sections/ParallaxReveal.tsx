@@ -1,66 +1,15 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { projects } from '../data/projects';
+import type { Project } from '../data/projects';
 
 gsap.registerPlugin(ScrollTrigger);
 
-interface Project {
-  name: string;
-  description: string;
-  tags: string[];
-  image: string;
-  repo: string;
-}
-
 const projectPairs: [Project, Project][] = [
-  [
-    {
-      name: 'OmniGraph',
-      description: 'Distributed RAG-MCP server for AI code assistance: local-first, read-only, hybrid semantic + lexical search over Qdrant + Memgraph + Tree-sitter, with a Go file watcher and 4-tool MCP bridge to Claude Code.',
-      tags: ['Python', 'Go', 'Qdrant', 'Memgraph'],
-      image: '/images/img-2.jpg',
-      repo: 'https://github.com/h3nr1-d14z/OmniGraph',
-    },
-    {
-      name: 'ai-redteam-toolkit',
-      description: 'AI-powered offensive security framework. 78 slash commands for pentest, red team, RE, game hacking, OSINT, forensics. Works with Claude Code & OpenCode.',
-      tags: ['Python', 'Security', 'AI', 'Offensive'],
-      image: '/images/img-1.jpg',
-      repo: 'https://github.com/h3nr1-d14z/ai-redteam-toolkit',
-    },
-  ],
-  [
-    {
-      name: 'nat-gate',
-      description: 'CLI tool for iptables port forwarding through Tailscale tunnels. Interactive TUI, multiple install methods, IPv4/IPv6, rate limiting.',
-      tags: ['Rust', 'CLI', 'Networking', 'Tailscale'],
-      image: '/images/img-3.jpg',
-      repo: 'https://github.com/h3nr1-d14z/nat-gate',
-    },
-    {
-      name: 'codeforces-minecraft',
-      description: 'Minecraft mod where players solve competitive programming problems for in-game rewards. ICPC-style scoring, because why not.',
-      tags: ['Java', 'Fabric', 'Minecraft', 'Gaming'],
-      image: '/images/img-4.jpg',
-      repo: 'https://github.com/h3nr1-d14z/codeforces-minecraft',
-    },
-  ],
-  [
-    {
-      name: 'memviz',
-      description: 'C++ memory & algorithm visualizer built for students who learn by seeing.',
-      tags: ['TypeScript', 'React', 'Education', 'C++'],
-      image: '/images/img-5.jpg',
-      repo: 'https://github.com/h3nr1-d14z/memviz',
-    },
-    {
-      name: 'messenger-desktop',
-      description: 'Unofficial Messenger desktop app with native features.',
-      tags: ['TypeScript', 'Electron', 'Desktop'],
-      image: '/images/img-6.jpg',
-      repo: 'https://github.com/h3nr1-d14z/messenger-desktop',
-    },
-  ],
+  [projects[2], projects[1]],   // OmniGraph, ai-redteam-toolkit
+  [projects[0], projects[3]],   // nat-gate, codeforces-minecraft
+  [projects[4], projects[5]],   // memviz, messenger-desktop
 ];
 
 function createParallaxReveal(el: HTMLImageElement) {
@@ -84,7 +33,13 @@ function createParallaxReveal(el: HTMLImageElement) {
   return tl;
 }
 
-function ProjectItem({ project, reverse }: { project: Project; reverse?: boolean }) {
+interface ProjectItemProps {
+  project: Project;
+  reverse?: boolean;
+  onProjectClick?: (project: Project) => void;
+}
+
+function ProjectItem({ project, reverse, onProjectClick }: ProjectItemProps) {
   const imageRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
@@ -100,7 +55,19 @@ function ProjectItem({ project, reverse }: { project: Project; reverse?: boolean
 
   return (
     <div className={`reveal__item${reverse ? ' reveal__item--reverse' : ''}`}>
-      <div className="reveal__image-block">
+      <div
+        className="reveal__image-block"
+        onClick={() => onProjectClick?.(project)}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onProjectClick?.(project);
+          }
+        }}
+        style={{ cursor: onProjectClick ? 'pointer' : 'default' }}
+      >
         <div className="reveal__image-wrapper">
           <img
             ref={imageRef}
@@ -131,14 +98,18 @@ function ProjectItem({ project, reverse }: { project: Project; reverse?: boolean
   );
 }
 
-export default function ParallaxReveal() {
+interface ParallaxRevealProps {
+  onProjectClick?: (project: Project) => void;
+}
+
+export default function ParallaxReveal({ onProjectClick }: ParallaxRevealProps) {
   return (
     <section className="reveal__section">
       <div className="reveal__wrapper">
         {projectPairs.map((pair, pairIndex) => (
           <div key={pairIndex}>
-            <ProjectItem project={pair[0]} reverse={pairIndex % 2 !== 0} />
-            <ProjectItem project={pair[1]} reverse={pairIndex % 2 === 0} />
+            <ProjectItem project={pair[0]} reverse={pairIndex % 2 !== 0} onProjectClick={onProjectClick} />
+            <ProjectItem project={pair[1]} reverse={pairIndex % 2 === 0} onProjectClick={onProjectClick} />
           </div>
         ))}
       </div>
