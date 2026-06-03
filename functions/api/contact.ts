@@ -21,10 +21,11 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
     }
 
     const discordPayload = {
-      content: null,
+      username: 'Contact Form',
+      content: '<@416498992700981250> 📡 Incoming transmission from portfolio...',
       embeds: [
         {
-          title: '📨 New Portfolio Contact',
+          title: '📡 Incoming Transmission',
           color: 0xd4af37,
           fields: [
             { name: 'Name', value: name, inline: true },
