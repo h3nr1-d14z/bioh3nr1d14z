@@ -3,5 +3,5 @@ compatibility_date = "2024-04-24"
 pages_build_output_dir = "dist"
 
 [[kv_namespaces]]
-id = "VISITOR_KV"
+id = "bbf3f6348c404fbc9459d7078f794a4f"
 binding = "VISITOR_KV"
