@@ -1,13 +1,24 @@
-import { useEffect, useState } from 'react';
-import { Users } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Activity } from 'lucide-react';
 
 export default function VisitorCounter() {
   const [count, setCount] = useState<number | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    const increment = async () => {
+    let sessionId = sessionStorage.getItem('sessionId');
+    if (!sessionId) {
+      sessionId = crypto.randomUUID();
+      sessionStorage.setItem('sessionId', sessionId);
+    }
+
+    const ping = async () => {
       try {
-        const res = await fetch('/api/visit', { method: 'POST' });
+        const res = await fetch('/api/visit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionId }),
+        });
         if (!res.ok) throw new Error('Failed');
         const data = await res.json();
         setCount(data.count);
@@ -16,7 +27,12 @@ export default function VisitorCounter() {
       }
     };
 
-    increment();
+    ping();
+    intervalRef.current = setInterval(ping, 30000);
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
   }, []);
 
   if (count === null) return null;
@@ -42,9 +58,9 @@ export default function VisitorCounter() {
         backdropFilter: 'blur(10px)',
       }}
     >
-      <Users size={14} color="#D4AF37" />
+      <Activity size={14} color="#00ff88" />
       <span>
-        <span style={{ color: '#D4AF37' }}>{count.toLocaleString()}</span> visitors
+        <span style={{ color: '#00ff88' }}>{count}</span> online
       </span>
     </div>
   );
