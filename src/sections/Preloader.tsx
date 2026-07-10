@@ -18,8 +18,8 @@ export default function Preloader({ onComplete }: PreloaderProps) {
 
     tl.to(counter, {
       val: 100,
-      duration: 2,
-      ease: 'power4.in',
+      duration: 1.2,
+      ease: 'power2.in',
       onUpdate: () => {
         setCount(Math.round(counter.val));
       },
@@ -27,12 +27,12 @@ export default function Preloader({ onComplete }: PreloaderProps) {
 
     tl.to([counterRef.current, brandRef.current], {
       opacity: 0,
-      duration: 0.5,
+      duration: 0.35,
     });
 
     tl.to(containerRef.current, {
       y: '-100%',
-      duration: 0.8,
+      duration: 0.6,
       ease: 'power4.inOut',
       onComplete: () => {
         onComplete();

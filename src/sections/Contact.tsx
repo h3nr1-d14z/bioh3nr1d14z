@@ -129,6 +129,10 @@ export default function Contact() {
           <form className="contact__form" onSubmit={handleSubmit}>
             <input
               type="text"
+              id="contact-name"
+              name="name"
+              autoComplete="name"
+              aria-label="Name"
               placeholder="Name"
               className="contact__input"
               value={formData.name}
@@ -137,6 +141,10 @@ export default function Contact() {
             />
             <input
               type="email"
+              id="contact-email"
+              name="email"
+              autoComplete="email"
+              aria-label="Email"
               placeholder="Email"
               className="contact__input"
               value={formData.email}
@@ -144,6 +152,9 @@ export default function Contact() {
               required
             />
             <textarea
+              id="contact-message"
+              name="message"
+              aria-label="Message"
               placeholder="Message"
               className="contact__textarea"
               value={formData.message}

@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
+const GOLD = 0xd4af37;
+
 export default function HeroScene() {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -10,63 +12,60 @@ export default function HeroScene() {
 
     // Scene
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x1c1c1c);
 
-    // Camera
+    // Camera — pull back slightly so the globe frames the text instead of covering it
     const camera = new THREE.PerspectiveCamera(
       75,
       window.innerWidth / window.innerHeight,
       0.1,
       1000
     );
-    camera.position.z = 2.5;
+    camera.position.z = 3;
 
-    // Renderer
+    // Renderer (transparent — the CSS background shows through)
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
-    // Icosahedron
-    const geometry = new THREE.IcosahedronGeometry(1, 1);
-    const material = new THREE.MeshStandardMaterial({
-      color: 0xD4AF37,
-      emissive: 0xD4AF37,
-      emissiveIntensity: 0.2,
-      flatShading: true,
-      roughness: 0.5,
-      metalness: 0.8,
-    });
-    const icosahedron = new THREE.Mesh(geometry, material);
-    scene.add(icosahedron);
+    // A single subdivided icosahedron shared by the fill, wireframe, and vertex points
+    // so one morph pass animates all three layers together.
+    const geometry = new THREE.IcosahedronGeometry(1, 2);
+    const globe = new THREE.Group();
 
-    // Wireframe overlay
-    const wireGeometry = new THREE.IcosahedronGeometry(1, 1);
-    // Scale vertices for wireframe
-    const wirePositions = wireGeometry.attributes.position;
-    for (let i = 0; i < wirePositions.count; i++) {
-      const x = wirePositions.getX(i);
-      const y = wirePositions.getY(i);
-      const z = wirePositions.getZ(i);
-      wirePositions.setXYZ(i, x * 1.05, y * 1.05, z * 1.05);
-    }
-    wireGeometry.computeVertexNormals();
+    // Subtle dark body — gives the wireframe depth and softly backs the text
+    const fillMaterial = new THREE.MeshBasicMaterial({
+      color: 0x0d0d0d,
+      transparent: true,
+      opacity: 0.35,
+      side: THREE.DoubleSide,
+      depthWrite: false,
+    });
+    const fillMesh = new THREE.Mesh(geometry, fillMaterial);
+    globe.add(fillMesh);
+
+    // Gold wireframe — the star of the show
     const wireMaterial = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
+      color: GOLD,
       wireframe: true,
       transparent: true,
-      opacity: 0.05,
+      opacity: 0.45,
     });
-    const wireMesh = new THREE.Mesh(wireGeometry, wireMaterial);
-    scene.add(wireMesh);
+    const wireMesh = new THREE.Mesh(geometry, wireMaterial);
+    globe.add(wireMesh);
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(ambientLight);
+    // Glowing vertices
+    const pointsMaterial = new THREE.PointsMaterial({
+      color: GOLD,
+      size: 0.035,
+      transparent: true,
+      opacity: 0.9,
+      sizeAttenuation: true,
+    });
+    const vertexPoints = new THREE.Points(geometry, pointsMaterial);
+    globe.add(vertexPoints);
 
-    const pointLight = new THREE.PointLight(0xffffff, 1);
-    pointLight.position.set(5, 5, 5);
-    scene.add(pointLight);
+    scene.add(globe);
 
     // Starfield
     const starsGeometry = new THREE.BufferGeometry();
@@ -87,7 +86,7 @@ export default function HeroScene() {
     const starField = new THREE.Points(starsGeometry, starsMaterial);
     scene.add(starField);
 
-    // Morphing logic
+    // Morphing logic — displace each vertex along its normal by an averaged noise
     const originalPositions = geometry.attributes.position.array.slice();
     const vertexFaces: number[][] = [];
     for (let i = 0; i < geometry.attributes.position.count; i++) {
@@ -131,7 +130,7 @@ export default function HeroScene() {
 
         let avgNoise = 0;
         for (const faceIndex of faces) {
-          avgNoise += Math.sin(time + faceIndex) * 0.1;
+          avgNoise += Math.sin(time + faceIndex) * 0.08;
         }
         avgNoise /= faces.length;
 
@@ -148,13 +147,9 @@ export default function HeroScene() {
       }
 
       geometry.attributes.position.needsUpdate = true;
-      geometry.computeVertexNormals();
 
-      icosahedron.rotation.y += 0.002 + mouseX * 0.05;
-      icosahedron.rotation.x = mouseY * 0.5;
-
-      wireMesh.rotation.y = icosahedron.rotation.y;
-      wireMesh.rotation.x = icosahedron.rotation.x;
+      globe.rotation.y += 0.0015 + mouseX * 0.05;
+      globe.rotation.x = mouseY * 0.5;
 
       starField.rotation.y += 0.0005;
 
@@ -177,9 +172,9 @@ export default function HeroScene() {
       document.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('resize', onResize);
       geometry.dispose();
-      material.dispose();
-      wireGeometry.dispose();
+      fillMaterial.dispose();
       wireMaterial.dispose();
+      pointsMaterial.dispose();
       starsGeometry.dispose();
       starsMaterial.dispose();
       renderer.dispose();
