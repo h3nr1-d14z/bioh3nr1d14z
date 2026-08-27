@@ -4,7 +4,9 @@ import { defineConfig } from "vite"
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: './',
+  // base tương đối làm hỏng asset ở route lồng như /writeups/<slug>:
+  // trình duyệt sẽ giải "./assets/x.js" thành /writeups/assets/x.js.
+  base: '/',
   plugins: [react()],
   server: {
     port: 3000,

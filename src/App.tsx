@@ -1,63 +1,40 @@
-import { useState, useCallback, lazy, Suspense } from 'react';
-import Preloader from './sections/Preloader';
+import { lazy, Suspense } from 'react';
+import { Route, Routes } from 'react-router';
 import Navigation from './sections/Navigation';
-import Carousel from './sections/Carousel';
-import PerspectiveText from './sections/PerspectiveText';
-import ParallaxReveal from './sections/ParallaxReveal';
-import SkillsMatrix from './sections/SkillsMatrix';
-import GitHubActivity from './sections/GitHubActivity';
-import Contact from './sections/Contact';
 import Footer from './sections/Footer';
 import ScrollProgress from './components/ScrollProgress';
 import BackToTop from './components/BackToTop';
 import TerminalOverlay from './components/TerminalOverlay';
 import VisitorCounter from './components/VisitorCounter';
-import ProjectModal from './components/ProjectModal';
-import type { Project } from './data/projects';
+import Home from './pages/Home';
 
-const Hero = lazy(() => import('./sections/Hero'));
+// Writeup kéo theo react-markdown + highlight.js. Tách chunk riêng để trang
+// chủ không phải tải phần đó.
+const WriteupsIndex = lazy(() => import('./pages/WriteupsIndex'));
+const WriteupDetail = lazy(() => import('./pages/WriteupDetail'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
-function HeroFallback() {
-  return <div style={{ height: '100vh', background: '#1c1c1c' }} />;
+function RouteFallback() {
+  return <div className="route-fallback">Loading…</div>;
 }
 
 export default function App() {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [activeProject, setActiveProject] = useState<Project | null>(null);
-
-  const handlePreloaderComplete = useCallback(() => {
-    setIsLoaded(true);
-  }, []);
-
-  const openProject = useCallback((project: Project) => {
-    setActiveProject(project);
-  }, []);
-
-  const closeProject = useCallback(() => {
-    setActiveProject(null);
-  }, []);
-
   return (
     <>
       <ScrollProgress />
-      <Preloader onComplete={handlePreloaderComplete} />
       <Navigation />
-      <main>
-        <Suspense fallback={<HeroFallback />}>
-          <Hero isReady={isLoaded} />
-        </Suspense>
-        <Carousel onProjectClick={openProject} />
-        <PerspectiveText />
-        <ParallaxReveal onProjectClick={openProject} />
-        <SkillsMatrix />
-        <GitHubActivity />
-        <Contact />
-      </main>
+      <Suspense fallback={<RouteFallback />}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/writeups" element={<WriteupsIndex />} />
+          <Route path="/writeups/:slug" element={<WriteupDetail />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
       <Footer />
       <BackToTop />
       <TerminalOverlay />
       <VisitorCounter />
-      <ProjectModal project={activeProject} onClose={closeProject} />
     </>
   );
 }

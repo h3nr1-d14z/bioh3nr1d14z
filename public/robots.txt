@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bioh3nr1d14z.pages.dev/sitemap.xml

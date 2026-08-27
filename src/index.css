@@ -1733,3 +1733,807 @@
     transform: none !important;
   }
 }
+
+/* ==========================================================================
+   Writeups
+   Tab riêng ở /writeups. Tông tối cố định — khác trang chủ vốn xen kẽ
+   sáng/tối — vì đây là nội dung dài để đọc, không phải để lướt.
+   ========================================================================== */
+.route-fallback {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Geist Mono', monospace;
+  font-size: 14px;
+  color: #9a9a9a;
+}
+
+.writeups,
+.writeup,
+.notfound {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 140px 40px 100px;
+  min-height: 70vh;
+}
+
+@media (max-width: 768px) {
+  .writeups,
+  .writeup,
+  .notfound {
+    padding: 110px 20px 70px;
+  }
+}
+
+.writeups__header {
+  margin-bottom: 44px;
+}
+
+.writeups__title {
+  font-family: 'Geist Mono', monospace;
+  font-size: 44px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  margin: 0 0 14px;
+}
+
+.writeups__intro {
+  font-family: 'Geist Mono', monospace;
+  font-size: 15px;
+  line-height: 1.75;
+  color: #9a9a9a;
+  max-width: 620px;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .writeups__title {
+    font-size: 30px;
+  }
+}
+
+/* --- bộ lọc + tìm kiếm --- */
+.writeups__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 36px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.writeups__search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 260px;
+  max-width: 340px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: #9a9a9a;
+  transition: border-color 0.25s ease-out;
+}
+
+.writeups__search:focus-within {
+  border-color: rgba(212, 175, 55, 0.55);
+}
+
+.writeups__search-input {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: none;
+  outline: none;
+  font-family: 'Geist Mono', monospace;
+  font-size: 13px;
+  color: #ffffff;
+}
+
+.writeups__search-input::placeholder {
+  color: #9a9a9a;
+}
+
+.writeups__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.writeups__filter {
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: #9a9a9a;
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  padding: 8px 13px;
+  cursor: pointer;
+  transition: color 0.22s ease-out, border-color 0.22s ease-out,
+    background-color 0.22s ease-out;
+}
+
+.writeups__filter:hover {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.writeups__filter.is-active {
+  color: #1c1c1c;
+  background: #D4AF37;
+  border-color: #D4AF37;
+}
+
+.writeups__empty {
+  font-family: 'Geist Mono', monospace;
+  font-size: 14px;
+  color: #9a9a9a;
+  padding: 60px 0;
+  text-align: center;
+}
+
+/* --- lưới thẻ --- */
+.writeups__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.writeups__item {
+  display: flex;
+}
+
+.writeup-card {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: border-color 0.25s ease-out, transform 0.25s ease-out,
+    background-color 0.25s ease-out;
+}
+
+.writeup-card:hover {
+  border-color: rgba(212, 175, 55, 0.45);
+  background: rgba(212, 175, 55, 0.04);
+  transform: translateY(-3px);
+}
+
+.writeup-card:focus-visible {
+  outline: 2px solid #D4AF37;
+  outline-offset: 3px;
+}
+
+.writeup-card__top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+/* Màu theo category để phân biệt nhanh khi lướt danh sách. */
+.writeup-card__cat {
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 4px 9px;
+  border-radius: 3px;
+  border: 1px solid currentColor;
+}
+
+.writeup-card__cat--pwn       { color: #ff7b72; }
+.writeup-card__cat--web       { color: #79c0ff; }
+.writeup-card__cat--crypto    { color: #d2a8ff; }
+.writeup-card__cat--rev       { color: #ffa657; }
+.writeup-card__cat--forensics { color: #7ee787; }
+.writeup-card__cat--misc      { color: #9a9a9a; }
+
+.writeup-card__ctf {
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  color: #9a9a9a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.writeup-card__title {
+  font-family: 'Geist Mono', monospace;
+  font-size: 18px;
+  line-height: 1.4;
+  color: #ffffff;
+  margin: 0 0 10px;
+}
+
+.writeup-card__summary {
+  font-family: 'Geist Mono', monospace;
+  font-size: 13px;
+  line-height: 1.65;
+  color: #9a9a9a;
+  margin: 0 0 16px;
+  flex: 1;
+}
+
+.writeup-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 14px;
+  color: #7d7d7d;
+}
+
+.writeup-card__tag {
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  color: #b9b9b9;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+  padding: 3px 7px;
+}
+
+.writeup-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  color: #9a9a9a;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.writeup-card__reading {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* --- trang chi tiết writeup --- */
+.writeup__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: #9a9a9a;
+  text-decoration: none;
+  margin-bottom: 30px;
+  transition: color 0.22s ease-out;
+}
+
+.writeup__back:hover {
+  color: #D4AF37;
+}
+
+.writeup__header {
+  padding-bottom: 28px;
+  margin-bottom: 40px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.writeup__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.writeup__badge {
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #9a9a9a;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 3px;
+  padding: 4px 9px;
+}
+
+.writeup__badge--draft {
+  color: #1c1c1c;
+  background: #D4AF37;
+  border-color: #D4AF37;
+}
+
+.writeup__title {
+  font-family: 'Geist Mono', monospace;
+  font-size: 36px;
+  line-height: 1.25;
+  color: #ffffff;
+  margin: 0 0 16px;
+}
+
+@media (max-width: 768px) {
+  .writeup__title {
+    font-size: 25px;
+  }
+}
+
+.writeup__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 13px;
+  color: #9a9a9a;
+}
+
+.writeup__reading {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.writeup__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.writeup__lede {
+  font-family: 'Geist Mono', monospace;
+  font-size: 15px;
+  color: #9a9a9a;
+  line-height: 1.7;
+}
+
+/* Mục lục dính bên phải trên màn rộng, xếp trên nội dung ở màn hẹp. */
+.writeup__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: 56px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .writeup__layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+  }
+
+  .writeup__toc {
+    order: -1;
+    position: static !important;
+  }
+}
+
+.writeup__toc {
+  position: sticky;
+  top: 110px;
+  font-family: 'Geist Mono', monospace;
+  border-left: 1px solid rgba(255, 255, 255, 0.09);
+  padding-left: 18px;
+}
+
+.writeup__toc-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #D4AF37;
+  margin: 0 0 12px;
+}
+
+.writeup__toc-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.writeup__toc-item a {
+  display: block;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #9a9a9a;
+  text-decoration: none;
+  padding: 5px 0;
+  transition: color 0.2s ease-out;
+}
+
+.writeup__toc-item a:hover {
+  color: #ffffff;
+}
+
+.writeup__toc-item--h3 a {
+  padding-left: 14px;
+  font-size: 12px;
+}
+
+/* --- điều hướng bài trước/sau --- */
+.writeup__pager {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 64px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+@media (max-width: 640px) {
+  .writeup__pager {
+    grid-template-columns: 1fr;
+  }
+}
+
+.writeup__pager-link {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 6px;
+  text-decoration: none;
+  transition: border-color 0.25s ease-out, background-color 0.25s ease-out;
+}
+
+.writeup__pager-link:hover {
+  border-color: rgba(212, 175, 55, 0.45);
+  background: rgba(212, 175, 55, 0.04);
+}
+
+.writeup__pager-link--next {
+  text-align: right;
+}
+
+.writeup__pager-label {
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #D4AF37;
+}
+
+.writeup__pager-title {
+  font-family: 'Geist Mono', monospace;
+  font-size: 14px;
+  color: #e6e6e6;
+  line-height: 1.45;
+}
+
+/* --- 404 --- */
+.notfound {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.notfound__code {
+  font-family: 'Geist Mono', monospace;
+  font-size: 84px;
+  color: #D4AF37;
+  margin: 0;
+  line-height: 1;
+}
+
+.notfound__title {
+  font-family: 'Geist Mono', monospace;
+  font-size: 26px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #ffffff;
+  margin: 20px 0 12px;
+}
+
+.notfound__body {
+  font-family: 'Geist Mono', monospace;
+  font-size: 14px;
+  color: #9a9a9a;
+  margin: 0 0 30px;
+}
+
+.notfound__actions {
+  display: flex;
+  gap: 14px;
+}
+
+.notfound__link {
+  font-family: 'Geist Mono', monospace;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  padding: 13px 26px;
+  text-decoration: none;
+  transition: color 0.25s ease-out, border-color 0.25s ease-out;
+}
+
+.notfound__link:hover {
+  color: #D4AF37;
+  border-color: #D4AF37;
+}
+
+/* ==========================================================================
+   Nội dung Markdown
+   Đây là phần chữ dài duy nhất trên site. Geist Mono dùng cho tiêu đề và code;
+   phần văn xuôi giữ luôn mono cho khớp bản sắc, nhưng nới line-height và giới
+   hạn độ dài dòng để đọc đoạn dài không mỏi.
+   ========================================================================== */
+.md {
+  font-family: 'Geist Mono', monospace;
+  font-size: 15px;
+  line-height: 1.8;
+  color: #d4d4d4;
+  /* ~72 ký tự/dòng: dài hơn thì mắt khó bắt đầu dòng kế tiếp. */
+  max-width: 72ch;
+}
+
+.md > *:first-child {
+  margin-top: 0;
+}
+
+.md h2 {
+  font-size: 24px;
+  color: #ffffff;
+  margin: 52px 0 18px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+  scroll-margin-top: 100px;
+}
+
+.md h3 {
+  font-size: 18px;
+  color: #ffffff;
+  margin: 36px 0 14px;
+  scroll-margin-top: 100px;
+}
+
+.md h4 {
+  font-size: 15px;
+  color: #D4AF37;
+  margin: 28px 0 12px;
+  scroll-margin-top: 100px;
+}
+
+.md p {
+  margin: 0 0 20px;
+}
+
+.md a {
+  color: #D4AF37;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.md a:hover {
+  color: #f0d78c;
+}
+
+.md strong {
+  color: #ffffff;
+}
+
+.md ul,
+.md ol {
+  /* Tailwind preflight đặt `list-style: none` cho mọi ul/ol, nên phải khôi
+     phục ở đây — nếu không thì danh sách đánh số trong writeup mất hết số. */
+  margin: 0 0 20px;
+  padding-left: 24px;
+}
+
+.md ul {
+  list-style: disc;
+}
+
+.md ol {
+  list-style: decimal;
+}
+
+.md li {
+  margin-bottom: 8px;
+}
+
+.md li::marker {
+  color: #D4AF37;
+}
+
+.md blockquote {
+  margin: 24px 0;
+  padding: 4px 0 4px 20px;
+  border-left: 3px solid #D4AF37;
+  color: #b0b0b0;
+}
+
+.md blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.md hr {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 40px 0;
+}
+
+.md img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  margin: 8px 0;
+}
+
+/* Code inline khác hẳn code block để không nhầm hai loại. */
+.md :not(pre) > code {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.88em;
+  color: #f0d78c;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 3px;
+  padding: 2px 6px;
+  word-break: break-word;
+}
+
+/* Bảng phải cuộn được trong khung riêng, không được đẩy cả trang tràn ngang. */
+.md-table-wrap,
+.md .table-wrap {
+  overflow-x: auto;
+}
+
+.md table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 24px;
+  font-size: 13.5px;
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.md th,
+.md td {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 9px 13px;
+  text-align: left;
+}
+
+.md th {
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
+}
+
+/* --- code block + nút copy --- */
+.md-code {
+  position: relative;
+  margin: 0 0 24px;
+}
+
+.md-code pre {
+  overflow-x: auto;
+  background: #121212;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 6px;
+  padding: 18px 20px;
+  margin: 0;
+}
+
+.md-code pre code {
+  font-family: 'Geist Mono', monospace;
+  font-size: 13px;
+  line-height: 1.65;
+  background: none;
+  border: none;
+  padding: 0;
+  color: #d4d4d4;
+}
+
+.md-code__copy {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: rgba(28, 28, 28, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 4px;
+  color: #9a9a9a;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease-out, color 0.2s ease-out, border-color 0.2s ease-out;
+}
+
+.md-code:hover .md-code__copy,
+.md-code__copy:focus-visible {
+  opacity: 1;
+}
+
+.md-code__copy:hover {
+  color: #D4AF37;
+  border-color: rgba(212, 175, 55, 0.5);
+}
+
+/* Trên thiết bị cảm ứng không có hover, nút phải luôn hiện. */
+@media (hover: none) {
+  .md-code__copy {
+    opacity: 1;
+  }
+}
+
+/* --- syntax highlight (highlight.js) ---
+   Bảng màu tự viết thay vì import theme của highlight.js: theme mặc định
+   kéo thêm ~10KB CSS và không khớp tông vàng-đen của site. */
+.hljs-comment,
+.hljs-quote {
+  color: #6f6f6f;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-type {
+  color: #ff7b72;
+}
+
+.hljs-string,
+.hljs-regexp,
+.hljs-addition {
+  color: #a5d6a7;
+}
+
+.hljs-number,
+.hljs-symbol,
+.hljs-bullet {
+  color: #f0d78c;
+}
+
+.hljs-title,
+.hljs-section,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class {
+  color: #d2a8ff;
+}
+
+.hljs-attr,
+.hljs-attribute,
+.hljs-variable,
+.hljs-template-variable {
+  color: #79c0ff;
+}
+
+.hljs-built_in,
+.hljs-class .hljs-title {
+  color: #ffa657;
+}
+
+.hljs-meta {
+  color: #9a9a9a;
+}
+
+.hljs-deletion {
+  color: #ff7b72;
+}
+
+.hljs-emphasis { font-style: italic; }
+.hljs-strong   { font-weight: 700; }
+
+/* Trang "không tìm thấy writeup": link quay lại nằm sau đoạn văn nên cần
+   khoảng thở, khác với link ở đầu trang bài. */
+.writeup--missing .writeup__back {
+  margin-top: 24px;
+}

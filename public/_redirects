@@ -1,0 +1,6 @@
+# SPA fallback cho Cloudflare Pages.
+# Không có dòng này thì mở thẳng /writeups/<slug> hoặc F5 giữa route sẽ ra
+# 404, vì Pages đi tìm file tĩnh đúng đường dẫn đó. /api/* phải đứng trước
+# để Pages Functions không bị nuốt vào fallback.
+/api/*  /api/:splat  200
+/*      /index.html  200
