@@ -23,7 +23,14 @@ function readFrontmatter(source) {
     const sep = line.indexOf(':');
     if (sep === -1) continue;
     const key = line.slice(0, sep).trim();
-    const value = line.slice(sep + 1).trim().replace(/^["']|["']$/g, '');
+    // Cắt comment cuối dòng trước, giống parser trong src/lib/writeups.ts —
+    // nếu không thì `draft: true  # ghi chú` không còn bằng 'true' và bài
+    // draft vẫn lọt vào sitemap.
+    const value = line
+      .slice(sep + 1)
+      .replace(/\s+#.*$/, '')
+      .trim()
+      .replace(/^["']|["']$/g, '');
     data[key] = value;
   }
   return data;

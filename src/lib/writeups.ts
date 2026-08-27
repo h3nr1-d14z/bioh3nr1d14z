@@ -46,7 +46,9 @@ type Scalar = string | number | boolean | string[];
  * không cần, và giữ nó nhỏ thì không phải kéo cả parser YAML vào bundle.
  */
 function parseScalar(raw: string): Scalar {
-  const value = raw.trim();
+  // Cắt comment cuối dòng: `draft: true  # ghi chú`. Chỉ cắt khi trước dấu #
+  // có khoảng trắng, để không phá giá trị chứa # (mã màu, hashtag).
+  const value = raw.replace(/\s+#.*$/, '').trim();
 
   if (value.startsWith('[') && value.endsWith(']')) {
     return value

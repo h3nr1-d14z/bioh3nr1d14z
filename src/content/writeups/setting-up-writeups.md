@@ -5,6 +5,7 @@ category: misc
 difficulty: easy
 date: 2026-08-27
 tags: [markdown, vite, cloudflare-pages]
+draft: true              # ẩn khỏi danh sách cho tới khi có writeup thật
 summary: "Ghi chú về cách phần writeup này được dựng: Markdown gom lúc build bằng import.meta.glob, không CMS, không database. Thêm bài = thêm một file .md rồi push."
 ---
 
