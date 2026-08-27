@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { projects } from '../data/projects';
 import type { Project } from '../data/projects';
+import { prefersReducedMotion } from '../lib/motion';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -20,6 +21,9 @@ export default function Carousel({ onProjectClick }: CarouselProps) {
   useEffect(() => {
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
+    // Vòng xoay 3D bị CSS ẩn khi giảm chuyển động (danh sách tĩnh hiện thay),
+    // nên không cần dựng timeline.
+    if (prefersReducedMotion()) return;
 
     const timer = setTimeout(() => {
       // Title entrance
@@ -106,8 +110,11 @@ export default function Carousel({ onProjectClick }: CarouselProps) {
   ];
 
   return (
-    <>
-      <section ref={wrapperRef} className="carousel__wrapper" id="projects">
+    /* id nằm trên thẻ bọc chứ không phải .carousel__wrapper: wrapper bị
+       display:none dưới 768px và khi giảm chuyển động, khiến anchor #projects
+       của nav mất tác dụng. */
+    <div id="projects">
+      <section ref={wrapperRef} className="carousel__wrapper">
         <h2 ref={titleRef} className="carousel__title">FEATURED SYSTEMS</h2>
         <div className="carousel__scene">
           {cols.map((col, colIdx) => (
@@ -166,6 +173,6 @@ export default function Carousel({ onProjectClick }: CarouselProps) {
           </div>
         ))}
       </div>
-    </>
+    </div>
   );
 }

@@ -1,4 +1,5 @@
 import { useRef, useEffect } from 'react';
+import { prefersReducedMotion } from '../lib/motion';
 
 interface TiltOptions {
   max?: number;
@@ -13,6 +14,9 @@ export function useTilt<T extends HTMLElement>(options: TiltOptions = {}) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    // Tilt bám chuột là chuyển động không chủ đích — bỏ hẳn khi người dùng
+    // yêu cầu giảm chuyển động.
+    if (prefersReducedMotion()) return;
 
     const handleMouseMove = (e: MouseEvent) => {
       const rect = el.getBoundingClientRect();

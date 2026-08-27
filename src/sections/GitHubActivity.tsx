@@ -4,6 +4,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Github, Star, GitFork, ExternalLink } from 'lucide-react';
 import TiltCard from '../components/TiltCard';
 
+import { prefersReducedMotion, revealInstantly } from '../lib/motion';
+
 gsap.registerPlugin(ScrollTrigger);
 
 interface Repo {
@@ -83,6 +85,11 @@ export default function GitHubActivity() {
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
+
+    if (prefersReducedMotion()) {
+      revealInstantly(section, ['.github__title', '.github__card']);
+      return;
+    }
 
     const tl = gsap.timeline({
       scrollTrigger: {

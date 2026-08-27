@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
+import { prefersReducedMotion } from '../lib/motion';
+
 gsap.registerPlugin(ScrollTrigger);
 
 export default function PerspectiveText() {
@@ -14,6 +16,13 @@ export default function PerspectiveText() {
 
     const words = wordsRef.current.filter(Boolean);
     if (words.length === 0) return;
+
+    // Đây là hiệu ứng nặng nhất trang: pin màn hình 3000px và xoay chữ 720°.
+    // Khi giảm chuyển động thì hiển thị chữ tĩnh, không pin, không xoay.
+    if (prefersReducedMotion()) {
+      gsap.set(words, { rotateX: 0, rotateY: 0, color: '#D4AF37' });
+      return;
+    }
 
     // Set initial 3D rotation on words
     words.forEach((word) => {

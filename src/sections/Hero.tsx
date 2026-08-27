@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import HeroScene from './HeroScene';
+import { prefersReducedMotion } from '../lib/motion';
 
 interface HeroProps {
   isReady: boolean;
@@ -14,6 +15,13 @@ export default function Hero({ isReady }: HeroProps) {
 
   useEffect(() => {
     if (!isReady) return;
+
+    if (prefersReducedMotion()) {
+      [labelRef, brandRef, subtitleRef, ctaRef].forEach((r) => {
+        if (r.current) gsap.set(r.current, { opacity: 1, y: 0, clearProps: 'transform' });
+      });
+      return;
+    }
 
     const tl = gsap.timeline();
 

@@ -64,13 +64,19 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
+  html,
+  body {
+    /* `clip` thay `hidden`: chặn tràn ngang mà không tạo scroll container,
+       nên không phá ScrollTrigger pin của GSAP. */
+    overflow-x: clip;
+  }
+
   body {
     font-family: 'Geist Mono', monospace;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background-color: #1c1c1c;
     color: #ffffff;
-    overflow-x: hidden;
   }
 }
 
@@ -143,8 +149,11 @@
   width: 720px;
   max-width: 92vw;
   height: 480px;
-  background: rgba(255, 255, 255, 0.01);
-  background-blend-mode: luminosity;
+  /* Nền quả cầu wireframe vàng chạy xuyên qua chữ. Lớp tối này là thứ tách
+     chữ khỏi nền — backdrop-filter một mình không đủ vì canvas nằm ở
+     stacking context khác nên không bị blur. */
+  background:
+    radial-gradient(ellipse 75% 70% at 50% 50%, rgba(10, 10, 10, 0.82) 0%, rgba(10, 10, 10, 0.55) 60%, rgba(10, 10, 10, 0.25) 100%);
   backdrop-filter: blur(60px) saturate(150%);
   -webkit-backdrop-filter: blur(60px) saturate(150%);
   border: none;
@@ -191,7 +200,7 @@
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #777777;
+  color: #9a9a9a;
   margin-bottom: 16px;
 }
 
@@ -240,8 +249,17 @@
   color: #1c1c1c;
 }
 
-/* Navigation */
+/* Navigation
+   Nav nổi trên các section xen kẽ sáng/tối, nên màu chữ phải đổi theo
+   section đang nằm dưới nó. `.nav--on-light` do IntersectionObserver gắn
+   trong Navigation.tsx. Mọi màu đi qua biến để chỉ cần đổi một chỗ. */
 .nav {
+  --nav-fg: #ffffff;
+  --nav-fg-muted: rgba(255, 255, 255, 0.72);
+  --nav-brand: #D4AF37;
+  --nav-surface: rgba(28, 28, 28, 0.72);
+  --nav-border: rgba(255, 255, 255, 0.1);
+
   position: fixed;
   top: 0;
   left: 0;
@@ -251,6 +269,29 @@
   align-items: center;
   justify-content: space-between;
   padding: 24px 40px;
+  transition: background-color 0.35s ease-out, backdrop-filter 0.35s ease-out,
+    border-color 0.35s ease-out, padding 0.35s ease-out;
+  border-bottom: 1px solid transparent;
+}
+
+/* Trên nền sáng #f1f1f1: chữ trắng chỉ đạt 1.13:1, phải lật sang tông tối.
+   #1c1c1c trên #f1f1f1 = 14.6:1, vàng đậm #826b22 = 4.56:1. */
+.nav--on-light {
+  --nav-fg: #1c1c1c;
+  --nav-fg-muted: rgba(28, 28, 28, 0.7);
+  --nav-brand: #826b22;
+  --nav-surface: rgba(241, 241, 241, 0.78);
+  --nav-border: rgba(28, 28, 28, 0.12);
+}
+
+/* Khi đã cuộn khỏi hero, thêm nền mờ để chữ luôn tách khỏi ảnh phía sau. */
+.nav--scrolled {
+  background-color: var(--nav-surface);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  border-bottom-color: var(--nav-border);
+  padding-top: 16px;
+  padding-bottom: 16px;
 }
 
 @media (max-width: 768px) {
@@ -264,12 +305,16 @@
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #D4AF37;
+  color: var(--nav-brand);
   text-decoration: none;
+  transition: color 0.35s ease-out;
+  position: relative;
+  z-index: 2;
 }
 
 .nav__links {
   display: flex;
+  align-items: center;
   gap: 32px;
 }
 
@@ -278,13 +323,104 @@
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #ffffff;
+  color: var(--nav-fg);
   text-decoration: none;
-  transition: color 0.3s ease-out;
+  transition: color 0.35s ease-out, opacity 0.2s ease-out;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
 }
 
 .nav__link:hover {
-  color: #D4AF37;
+  color: var(--nav-brand);
+}
+
+.nav__link:focus-visible,
+.nav__brand:focus-visible,
+.nav__toggle:focus-visible {
+  outline: 2px solid var(--nav-brand);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* Section đang xem được đánh dấu để người dùng biết mình đang ở đâu. */
+.nav__link[aria-current='true'] {
+  color: var(--nav-brand);
+}
+
+/* Nút hamburger — chỉ hiện dưới 768px */
+.nav__toggle {
+  display: none;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--nav-fg);
+  position: relative;
+  z-index: 2;
+  transition: color 0.35s ease-out;
+}
+
+.nav__toggle-bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+  position: absolute;
+  transition: transform 0.3s ease-out, opacity 0.2s ease-out;
+}
+
+.nav__toggle-bar:nth-child(1) { transform: translateY(-6px); }
+.nav__toggle-bar:nth-child(3) { transform: translateY(6px); }
+
+.nav--open .nav__toggle-bar:nth-child(1) { transform: rotate(45deg); }
+.nav--open .nav__toggle-bar:nth-child(2) { opacity: 0; }
+.nav--open .nav__toggle-bar:nth-child(3) { transform: rotate(-45deg); }
+
+@media (max-width: 768px) {
+  .nav__toggle {
+    display: flex;
+  }
+
+  /* Panel mobile: full-screen, luôn tông tối để chữ đọc được
+     bất kể section phía dưới sáng hay tối. */
+  .nav__links {
+    position: fixed;
+    inset: 0;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(18, 18, 18, 0.97);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 0.28s ease-out, transform 0.28s ease-out,
+      visibility 0s linear 0.28s;
+  }
+
+  .nav--open .nav__links {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition: opacity 0.28s ease-out, transform 0.28s ease-out,
+      visibility 0s linear 0s;
+  }
+
+  .nav__links .nav__link {
+    color: #ffffff;
+    font-size: 20px;
+    padding: 18px 24px;
+  }
+
+  .nav__links .nav__link[aria-current='true'] {
+    color: #D4AF37;
+  }
 }
 
 /* 3D Carousel */
@@ -519,7 +655,7 @@
 .reveal__desc {
   font-family: 'Geist Mono', monospace;
   font-size: 15px;
-  color: #777777;
+  color: #9a9a9a;
   line-height: 1.6;
   margin-bottom: 20px;
 }
@@ -601,7 +737,7 @@
 .contact__body {
   font-family: 'Geist Mono', monospace;
   font-size: 15px;
-  color: #777777;
+  color: #5f5f5f;
   line-height: 1.6;
   margin-bottom: 40px;
 }
@@ -648,7 +784,7 @@
 }
 
 .contact__input::placeholder {
-  color: #888888;
+  color: #5f5f5f;
 }
 
 .contact__textarea {
@@ -671,7 +807,7 @@
 }
 
 .contact__textarea::placeholder {
-  color: #888888;
+  color: #5f5f5f;
 }
 
 .contact__submit {
@@ -728,19 +864,19 @@
   font-family: 'Geist Mono', monospace;
   font-size: 13px;
   text-transform: uppercase;
-  color: #777777;
+  color: #9a9a9a;
 }
 
 .footer__location {
   font-family: 'Geist Mono', monospace;
   font-size: 13px;
-  color: #777777;
+  color: #9a9a9a;
 }
 
 .footer__copyright {
   font-family: 'Geist Mono', monospace;
   font-size: 13px;
-  color: #777777;
+  color: #9a9a9a;
   margin-top: 16px;
 }
 
@@ -813,7 +949,7 @@
 .carousel__mobile-desc {
   font-family: 'Geist Mono', monospace;
   font-size: 13px;
-  color: #777777;
+  color: #9a9a9a;
 }
 
 /* Scroll Progress Bar */
@@ -915,7 +1051,7 @@
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #777777;
+  color: #9a9a9a;
   background: transparent;
   border: 1px solid #333333;
   padding: 8px 20px;
@@ -1030,7 +1166,7 @@
 .github__loading {
   font-family: 'Geist Mono', monospace;
   font-size: 14px;
-  color: #777777;
+  color: #5f5f5f;
   text-align: center;
   margin-bottom: 24px;
 }
@@ -1081,7 +1217,7 @@
 }
 
 .github__icon {
-  color: #777777;
+  color: #5f5f5f;
   transition: color 0.3s ease-out;
 }
 
@@ -1092,7 +1228,7 @@
 .github__desc {
   font-family: 'Geist Mono', monospace;
   font-size: 13px;
-  color: #777777;
+  color: #5f5f5f;
   line-height: 1.5;
   margin-bottom: 16px;
   flex: 1;
@@ -1104,7 +1240,7 @@
   gap: 16px;
   font-family: 'Geist Mono', monospace;
   font-size: 12px;
-  color: #777777;
+  color: #5f5f5f;
 }
 
 .github__lang {
@@ -1176,7 +1312,7 @@
 .terminal-close {
   background: transparent;
   border: none;
-  color: #777777;
+  color: #9a9a9a;
   cursor: pointer;
   padding: 4px;
   transition: color 0.3s ease-out;
@@ -1522,4 +1658,52 @@
 
 .carousel__mobile-card {
   cursor: pointer;
+}
+
+/* ==========================================================================
+   Giảm chuyển động
+   Trang này pin section, xoay chữ 720°, parallax scrub, tilt theo chuột và
+   quay một quả cầu 3D không ngừng. Với người bị rối loạn tiền đình thì đó là
+   chóng mặt thật, không phải chuyện thẩm mỹ. Phần JS đã bỏ qua các timeline
+   GSAP (xem src/lib/motion.ts); khối này xử lý nốt phần thuần CSS.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Vòng xoay 3D không có phiên bản tĩnh dùng được, nên đổi sang đúng danh
+     sách thẻ vẫn dùng cho mobile. */
+  .carousel__wrapper {
+    display: none;
+  }
+
+  .carousel__mobile {
+    display: block;
+  }
+
+  /* Section pin 3000px chỉ để xoay một câu — bỏ pin, để chữ chảy tự nhiên. */
+  .perspective__wrapper {
+    height: auto;
+    min-height: 60vh;
+    padding: 80px 0;
+  }
+
+  .perspective__word {
+    transform: none !important;
+  }
+
+  /* Ảnh dự án hiện luôn thay vì bị cắt dần theo scroll. */
+  .reveal__image-wrapper {
+    clip-path: none !important;
+  }
+
+  .reveal__image {
+    transform: none !important;
+  }
 }

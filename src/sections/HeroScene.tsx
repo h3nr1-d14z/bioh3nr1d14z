@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { prefersReducedMotion } from '../lib/motion';
 
 const GOLD = 0xd4af37;
 
@@ -112,14 +113,20 @@ export default function HeroScene() {
       mouseX = (event.clientX - window.innerWidth / 2) * 0.0005;
       mouseY = (event.clientY - window.innerHeight / 2) * 0.0005;
     };
-    document.addEventListener('mousemove', onMouseMove);
+    if (!prefersReducedMotion()) {
+      document.addEventListener('mousemove', onMouseMove);
+    }
 
     let animationId: number;
+    // Quả cầu quay + nhiễu liên tục là chuyển động nền không dừng.
+    // Khi giảm chuyển động: vẽ đúng một khung tĩnh rồi thôi.
+    const reduced = prefersReducedMotion();
 
     const animate = () => {
-      animationId = requestAnimationFrame(animate);
-
-      time += 0.01;
+      if (!reduced) {
+        animationId = requestAnimationFrame(animate);
+        time += 0.01;
+      }
 
       const positions = geometry.attributes.position.array as Float32Array;
       const posCount = positions.length / 3;

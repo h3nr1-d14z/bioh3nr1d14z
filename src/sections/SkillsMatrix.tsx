@@ -3,6 +3,8 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import TiltCard from '../components/TiltCard';
 
+import { prefersReducedMotion, revealInstantly } from '../lib/motion';
+
 gsap.registerPlugin(ScrollTrigger);
 
 interface Skill {
@@ -48,6 +50,11 @@ export default function SkillsMatrix() {
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
+
+    if (prefersReducedMotion()) {
+      revealInstantly(section, ['.skills__title', '.skills__filter-btn', '.skills__card']);
+      return;
+    }
 
     const tl = gsap.timeline({
       scrollTrigger: {

@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { projects } from '../data/projects';
 import type { Project } from '../data/projects';
+import { prefersReducedMotion } from '../lib/motion';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,6 +17,13 @@ function createParallaxReveal(el: HTMLImageElement) {
   const wrapper = el.closest('.reveal__image-wrapper') as HTMLElement;
   const item = el.closest('.reveal__item') as HTMLElement;
   if (!wrapper || !item) return null;
+
+  // Không parallax-scrub: hiện ảnh ở trạng thái cuối ngay lập tức.
+  if (prefersReducedMotion()) {
+    gsap.set(el, { scale: 1 });
+    gsap.set(wrapper, { clipPath: 'inset(0% 0 0 0)' });
+    return null;
+  }
 
   const tl = gsap.timeline({
     defaults: { ease: 'power2.out' },

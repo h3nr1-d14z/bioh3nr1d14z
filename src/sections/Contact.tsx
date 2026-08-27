@@ -4,6 +4,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { toast } from 'sonner';
 import { Copy, Check } from 'lucide-react';
 
+import { prefersReducedMotion } from '../lib/motion';
+
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Contact() {
@@ -18,6 +20,15 @@ export default function Contact() {
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
+
+    // Hai cột trượt vào từ x: ±50 — đây cũng chính là nguồn gây tràn ngang,
+    // nên khi giảm chuyển động thì đặt thẳng về vị trí cuối.
+    if (prefersReducedMotion()) {
+      [leftRef.current, rightRef.current].forEach((el) => {
+        if (el) gsap.set(el, { x: 0, opacity: 1 });
+      });
+      return;
+    }
 
     const tl = gsap.timeline({
       scrollTrigger: {
