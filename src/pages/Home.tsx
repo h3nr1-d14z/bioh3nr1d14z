@@ -5,6 +5,7 @@ import Carousel from '../sections/Carousel';
 import PerspectiveText from '../sections/PerspectiveText';
 import ParallaxReveal from '../sections/ParallaxReveal';
 import SkillsMatrix from '../sections/SkillsMatrix';
+import Now from '../sections/Now';
 import GitHubActivity from '../sections/GitHubActivity';
 import Contact from '../sections/Contact';
 import ProjectModal from '../components/ProjectModal';
@@ -48,6 +49,7 @@ export default function Home() {
         <PerspectiveText />
         <ParallaxReveal onProjectClick={openProject} />
         <SkillsMatrix />
+        <Now />
         <GitHubActivity />
         <Contact />
       </main>

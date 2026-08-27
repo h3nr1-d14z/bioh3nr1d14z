@@ -2537,3 +2537,433 @@
 .writeup--missing .writeup__back {
   margin-top: 24px;
 }
+
+/* ==========================================================================
+   Section "Currently"
+   Gộp phần Now viết tay với hai nguồn dữ liệu sống (Discord presence và
+   heatmap GitHub). Cả hai nguồn đều có thể vắng mặt, nên lưới phải chịu được
+   việc cột phải rỗng.
+   ========================================================================== */
+.now {
+  background: #1c1c1c;
+  padding: 110px 40px;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .now {
+    padding: 70px 20px;
+  }
+}
+
+.now__title {
+  font-family: 'Geist Mono', monospace;
+  font-size: 40px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 52px;
+}
+
+@media (max-width: 768px) {
+  .now__title {
+    font-size: 24px;
+    margin-bottom: 34px;
+  }
+}
+
+.now__layout {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+  gap: 28px;
+  align-items: start;
+}
+
+.now__panel--live {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Panel live rỗng (Lanyard chưa theo dõi + heatmap lỗi) sẽ thành ô trống
+   lơ lửng — :empty gỡ nó khỏi lưới. */
+.now__panel--live:empty {
+  display: none;
+}
+
+.now__list {
+  margin: 0;
+}
+
+.now__row {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.now__row:first-child {
+  padding-top: 0;
+}
+
+@media (max-width: 480px) {
+  .now__row {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+}
+
+.now__label {
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #D4AF37;
+  margin: 0;
+  padding-top: 2px;
+}
+
+.now__value {
+  font-family: 'Geist Mono', monospace;
+  font-size: 14px;
+  line-height: 1.65;
+  color: #d4d4d4;
+  margin: 0;
+}
+
+.now__updated {
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  color: #9a9a9a;
+  margin: 18px 0 0;
+}
+
+/* --- Discord presence --- */
+.presence {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.presence__head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.presence__avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.presence__avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: block;
+  object-fit: cover;
+}
+
+.presence__dot {
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  /* Viền cùng màu nền panel để chấm trông như khoét vào avatar. */
+  border: 3px solid #232323;
+}
+
+.presence__dot--online  { background: #3ba55d; }
+.presence__dot--idle    { background: #faa81a; }
+.presence__dot--dnd     { background: #ed4245; }
+.presence__dot--offline { background: #747f8d; }
+
+.presence__identity {
+  min-width: 0;
+}
+
+.presence__name {
+  font-family: 'Geist Mono', monospace;
+  font-size: 16px;
+  color: #ffffff;
+  margin: 0 0 4px;
+}
+
+.presence__status {
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  color: #9a9a9a;
+  margin: 0;
+}
+
+.presence__idle {
+  font-family: 'Geist Mono', monospace;
+  font-size: 13px;
+  color: #9a9a9a;
+  margin: 16px 0 0;
+}
+
+.presence__activity {
+  display: flex;
+  gap: 13px;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.presence__art {
+  width: 54px;
+  height: 54px;
+  border-radius: 5px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.presence__art--blank {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.presence__activity-text {
+  min-width: 0;
+  flex: 1;
+}
+
+.presence__verb {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #D4AF37;
+  margin: 0 0 5px;
+}
+
+.presence__activity-name {
+  font-family: 'Geist Mono', monospace;
+  font-size: 14px;
+  color: #ffffff;
+  margin: 0 0 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.presence__line {
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  color: #9a9a9a;
+  margin: 0 0 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.presence__elapsed {
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  color: #7d7d7d;
+  margin: 6px 0 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.presence__progress {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 9px;
+}
+
+.presence__progress-fill {
+  display: block;
+  height: 100%;
+  background: #1db954;
+  /* Cập nhật mỗi giây; transition làm thanh chạy mượt giữa các nhịp. */
+  transition: width 1s linear;
+}
+
+/* --- Heatmap đóng góp --- */
+.heatmap {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.heatmap__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.heatmap__total {
+  font-family: 'Geist Mono', monospace;
+  font-size: 13px;
+  color: #9a9a9a;
+  margin: 0;
+}
+
+.heatmap__total strong {
+  color: #D4AF37;
+  font-size: 17px;
+}
+
+.heatmap__streaks {
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  color: #9a9a9a;
+  margin: 0;
+}
+
+/* 53 cột không vừa màn hẹp — cuộn trong khung riêng, tuyệt đối không để
+   đẩy cả trang tràn ngang. */
+.heatmap__scroll {
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.heatmap__inner {
+  min-width: max-content;
+}
+
+.heatmap__months {
+  display: grid;
+  grid-template-columns: repeat(53, 11px);
+  font-family: 'Geist Mono', monospace;
+  font-size: 9px;
+  color: #7d7d7d;
+  margin-bottom: 4px;
+  height: 12px;
+}
+
+.heatmap__month {
+  grid-row: 1;
+  white-space: nowrap;
+}
+
+.heatmap__grid {
+  display: flex;
+  gap: 3px;
+}
+
+.heatmap__week {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.heatmap__day {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Thang vàng cho khớp bản sắc, thay vì xanh mặc định của GitHub. */
+.heatmap__day--l0 { background: rgba(255, 255, 255, 0.06); }
+.heatmap__day--l1 { background: rgba(212, 175, 55, 0.28); }
+.heatmap__day--l2 { background: rgba(212, 175, 55, 0.5); }
+.heatmap__day--l3 { background: rgba(212, 175, 55, 0.75); }
+.heatmap__day--l4 { background: #D4AF37; }
+.heatmap__day--empty { background: transparent; }
+
+.heatmap__legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-top: 12px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 10px;
+  color: #7d7d7d;
+}
+
+/* Thanh cuộn mặc định sáng chói trên nền tối — làm mảnh và chìm đi. */
+.heatmap__scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.heatmap__scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 999px;
+}
+
+.heatmap__scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+}
+
+.heatmap__scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.5);
+}
+
+.heatmap__scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.16) rgba(255, 255, 255, 0.04);
+}
+
+/* ==========================================================================
+   Bộ đếm người đang xem
+   Trước đây dùng inline style nên không đặt được media query, và ở mobile
+   nó đè lên nội dung đang đọc. Chuyển sang class để thu nhỏ trên màn hẹp.
+   Không tương tác được nên pointer-events: none — không bao giờ chặn thao tác.
+   ========================================================================== */
+.visitor-counter {
+  position: fixed;
+  bottom: 32px;
+  left: 32px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  color: #9a9a9a;
+  background: rgba(20, 20, 20, 0.92);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  pointer-events: none;
+}
+
+.visitor-counter__icon {
+  color: #00ff88;
+  flex-shrink: 0;
+}
+
+.visitor-counter__value {
+  color: #00ff88;
+}
+
+@media (max-width: 768px) {
+  .visitor-counter {
+    bottom: 14px;
+    left: 14px;
+    padding: 5px 11px;
+    font-size: 11px;
+    gap: 6px;
+  }
+}
+
+/* Màn rất hẹp: bộ đếm không đáng để che mất một dòng chữ. */
+@media (max-width: 380px) {
+  .visitor-counter {
+    display: none;
+  }
+}

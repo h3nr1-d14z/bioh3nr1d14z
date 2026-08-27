@@ -17,6 +17,9 @@ export default function Carousel({ onProjectClick }: CarouselProps) {
   const wrapperRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const trackRefs = useRef<(HTMLDivElement | null)[]>([]);
+  // Timeline trước đây được cất vào (wrapper as any).__tls — gắn state lên DOM
+  // node và ép hai chỗ phải dùng `any`. Ref là chỗ đúng để giữ chúng.
+  const timelinesRef = useRef<gsap.core.Timeline[]>([]);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
@@ -89,13 +92,13 @@ export default function Carousel({ onProjectClick }: CarouselProps) {
         }
       );
 
-      (wrapper as any).__tls = timelines;
+      timelinesRef.current = timelines;
     }, 200);
 
     return () => {
       clearTimeout(timer);
-      const tls = (wrapper as any).__tls as gsap.core.Timeline[] | undefined;
-      tls?.forEach(tl => tl.kill());
+      timelinesRef.current.forEach((tl) => tl.kill());
+      timelinesRef.current = [];
     };
   }, []);
 

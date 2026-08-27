@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Activity } from 'lucide-react';
 
+const PING_INTERVAL_MS = 30_000;
+
 export default function VisitorCounter() {
   const [count, setCount] = useState<number | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -20,7 +22,7 @@ export default function VisitorCounter() {
           body: JSON.stringify({ sessionId }),
         });
         if (!res.ok) throw new Error('Failed');
-        const data = await res.json();
+        const data = (await res.json()) as { count: number };
         setCount(data.count);
       } catch {
         setCount(null);
@@ -28,7 +30,7 @@ export default function VisitorCounter() {
     };
 
     ping();
-    intervalRef.current = setInterval(ping, 30000);
+    intervalRef.current = setInterval(ping, PING_INTERVAL_MS);
 
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
@@ -38,29 +40,10 @@ export default function VisitorCounter() {
   if (count === null) return null;
 
   return (
-    <div
-      className="visitor-counter"
-      style={{
-        position: 'fixed',
-        bottom: '32px',
-        left: '32px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-        fontFamily: "'Geist Mono', monospace",
-        fontSize: '12px',
-        color: '#777777',
-        zIndex: 100,
-        background: 'rgba(28, 28, 28, 0.8)',
-        padding: '8px 16px',
-        borderRadius: '20px',
-        border: '1px solid rgba(212, 175, 55, 0.3)',
-        backdropFilter: 'blur(10px)',
-      }}
-    >
-      <Activity size={14} color="#00ff88" />
+    <div className="visitor-counter">
+      <Activity size={14} className="visitor-counter__icon" aria-hidden="true" />
       <span>
-        <span style={{ color: '#00ff88' }}>{count}</span> online
+        <span className="visitor-counter__value">{count}</span> online
       </span>
     </div>
   );
