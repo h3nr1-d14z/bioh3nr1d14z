@@ -1740,7 +1740,11 @@
    sáng/tối — vì đây là nội dung dài để đọc, không phải để lướt.
    ========================================================================== */
 .route-fallback {
-  min-height: 60vh;
+  /* 100vh chứ không phải 60vh: route writeup được lazy-load, nên footer render
+     ngay sau fallback. Fallback thấp thì footer nằm trong khung nhìn rồi bị
+     đẩy xuống khi chunk tải xong — CLS 0.40. Cao đúng một màn hình thì footer
+     khởi đầu dưới nếp gấp và việc nó dịch xuống không còn tính là shift. */
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2966,4 +2970,38 @@
   .visitor-counter {
     display: none;
   }
+}
+
+/* Gợi ý terminal ẩn — kín đáo, không tranh chỗ với nội dung chính.
+   Mặc định ẩn: trên điện thoại không có phím ` nên câu này vô nghĩa. */
+.footer__hint {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .footer__hint {
+    display: block;
+  }
+}
+
+.footer__hint {
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  /* #6f6f6f chỉ đạt 3.39:1 trên nền #1c1c1c — Lighthouse báo lỗi tương phản. */
+  color: #9a9a9a;
+  margin: 22px 0 0;
+  text-align: center;
+}
+
+.footer__kbd {
+  display: inline-block;
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  color: #9a9a9a;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  padding: 1px 6px;
+  margin: 0 2px;
 }

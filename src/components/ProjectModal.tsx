@@ -76,9 +76,12 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
         <div className="project-modal__image-wrap">
           <img
             src={project.image}
-            alt={project.name}
+            alt={`Screenshot of ${project.name}`}
             className="project-modal__image"
+            width={1184}
+            height={864}
             loading="eager"
+            decoding="async"
           />
           <div className="project-modal__image-gradient" />
         </div>

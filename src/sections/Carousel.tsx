@@ -169,7 +169,15 @@ export default function Carousel({ onProjectClick }: CarouselProps) {
               }
             }}
           >
-            <img className="carousel__mobile-image" src={p.image} alt={p.name} />
+            <img
+              className="carousel__mobile-image"
+              src={p.image}
+              alt={`Screenshot of ${p.name}`}
+              width={1184}
+              height={864}
+              loading="lazy"
+              decoding="async"
+            />
             <div className="carousel__mobile-info">
               <div className="carousel__mobile-title">{p.name}</div>
             </div>

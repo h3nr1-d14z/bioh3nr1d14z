@@ -1,7 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  content: [
+    './index.html',
+    './src/**/*.{js,ts,jsx,tsx}',
+    // 53 file shadcn/ui trong src/components/ui/ không được import ở đâu cả
+    // (kiểm bằng grep, và không file nào lọt vào bundle JS). Nhưng Tailwind
+    // vẫn quét chúng và sinh CSS cho hàng loạt class không bao giờ render.
+    '!./src/components/ui/**',
+  ],
   theme: {
     extend: {
       colors: {

@@ -48,7 +48,7 @@ export default function Hero({ isReady }: HeroProps) {
       <HeroScene />
       <div className="hero__content">
         <div ref={labelRef} className="hero__label">
-          Game Dev · Full-Stack · DevOps
+          Game Dev · Full-Stack · DevOps · Security
         </div>
         <h1 ref={brandRef} className="hero__brand">
           h3nr1.d14z

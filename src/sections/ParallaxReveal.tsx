@@ -75,7 +75,13 @@ function ProjectItem({ project, reverse, onProjectClick }: ProjectItemProps) {
             ref={imageRef}
             className="reveal__image"
             src={project.image}
-            alt={project.name}
+            alt={`Screenshot of ${project.name}`}
+            /* Kích thước tường minh giữ chỗ trước khi ảnh tải xong, tránh
+               layout shift. Tỉ lệ khớp aspect-ratio 4/3 của wrapper. */
+            width={1184}
+            height={864}
+            loading="lazy"
+            decoding="async"
           />
         </div>
       </div>

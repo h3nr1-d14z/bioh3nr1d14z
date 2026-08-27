@@ -49,3 +49,6 @@ lerna-debug.log*
 
 # typescript
 *.tsbuildinfo
+
+# sinh bởi scripts/generate-sitemap.mjs khi build
+public/sitemap.xml

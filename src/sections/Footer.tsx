@@ -50,6 +50,13 @@ export default function Footer() {
             Writeups
           </Link>
         </div>
+
+        {/* Terminal ẩn mở bằng phím ` nhưng không có gợi ý nào trên trang nên
+            thực tế không ai tìm ra. CSS ẩn dòng này trên thiết bị không bàn
+            phím — dùng media query thay vì state để không phải render hai lần. */}
+        <p className="footer__hint">
+          Press <kbd className="footer__kbd">`</kbd> for a terminal
+        </p>
       </div>
     </footer>
   );

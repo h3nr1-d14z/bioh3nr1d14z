@@ -1,3 +1,4 @@
+import { onRequestGet as __api_avatar_ts_onRequestGet } from "/Volumes/External/Projects/HieuLD/bioh3nr1d14z/functions/api/avatar.ts"
 import { onRequestOptions as __api_contact_ts_onRequestOptions } from "/Volumes/External/Projects/HieuLD/bioh3nr1d14z/functions/api/contact.ts"
 import { onRequestPost as __api_contact_ts_onRequestPost } from "/Volumes/External/Projects/HieuLD/bioh3nr1d14z/functions/api/contact.ts"
 import { onRequestGet as __api_github_ts_onRequestGet } from "/Volumes/External/Projects/HieuLD/bioh3nr1d14z/functions/api/github.ts"
@@ -6,6 +7,13 @@ import { onRequest as __api_visit_ts_onRequest } from "/Volumes/External/Project
 
 export const routes = [
     {
+      routePath: "/api/avatar",
+      mountPath: "/api",
+      method: "GET",
+      middlewares: [],
+      modules: [__api_avatar_ts_onRequestGet],
+    },
+  {
       routePath: "/api/contact",
       mountPath: "/api",
       method: "OPTIONS",

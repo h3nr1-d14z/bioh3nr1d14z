@@ -1,0 +1,24 @@
+# h3nr1.d14z
+
+Portfolio và CTF writeups của Le Duc Hieu (h3nr1.d14z) — Game Dev, Full-Stack
+và DevOps engineer tại Hanoi, Vietnam. Làm việc tại The1Studio.
+
+## Trang chính
+
+- [Trang chủ](https://bioh3nr1d14z.pages.dev/): dự án, kỹ năng, trạng thái hiện tại, hoạt động GitHub, liên hệ
+- [Writeups](https://bioh3nr1d14z.pages.dev/writeups): CTF writeups theo mảng pwn, web, crypto, reverse, forensics
+- [Sitemap](https://bioh3nr1d14z.pages.dev/sitemap.xml)
+
+## Dự án
+
+- [ai-redteam-toolkit](https://github.com/h3nr1-d14z/ai-redteam-toolkit): framework tấn công có AI hỗ trợ, 78 slash command cho pentest, red team, RE, OSINT, forensics
+- [OmniGraph](https://github.com/h3nr1-d14z/OmniGraph): RAG-MCP server phân tán, local-first, hybrid semantic + lexical search trên Qdrant và Memgraph
+- [nat-gate](https://github.com/h3nr1-d14z/nat-gate): CLI Rust chuyển tiếp cổng iptables qua tunnel Tailscale
+- [codeforces-minecraft](https://github.com/h3nr1-d14z/codeforces-minecraft): mod Minecraft Fabric giải bài competitive programming để nhận thưởng trong game
+- [memviz](https://github.com/h3nr1-d14z/memviz): công cụ trực quan hoá bộ nhớ và thuật toán C++
+- [messenger-desktop](https://github.com/h3nr1-d14z/messenger-desktop): ứng dụng Messenger desktop không chính thức
+
+## Liên hệ
+
+- GitHub: https://github.com/h3nr1-d14z
+- Email: leduchieu101@gmail.com

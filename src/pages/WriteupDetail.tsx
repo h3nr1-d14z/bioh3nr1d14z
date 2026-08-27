@@ -5,6 +5,7 @@ import remarkGfm from 'remark-gfm';
 import rehypeSlug from 'rehype-slug';
 import { rehypeHighlightLite } from '../lib/rehypeHighlightLite';
 import { ArrowLeft, Clock, Check, Copy } from 'lucide-react';
+import GithubSlugger from 'github-slugger';
 import { getWriteup, writeups, CATEGORY_LABELS, formatDate } from '../lib/writeups';
 import { usePageMeta } from '../lib/usePageMeta';
 
@@ -57,25 +58,42 @@ export default function WriteupDetail() {
   const { slug } = useParams<{ slug: string }>();
   const writeup = slug ? getWriteup(slug) : undefined;
 
-  const bodyRef = useRef<HTMLElement>(null);
-  const [headings, setHeadings] = useState<Heading[]>([]);
+  // Mục lục tính đồng bộ ngay lúc render, không chờ effect.
+  //
+  // Hai lần trước đều sai theo hướng khác nhau:
+  //  1. Tự viết slugify — strip mọi ký tự ngoài [\w\s-] nên tiêu đề tiếng Việt
+  //     "Vì sao là Markdown tĩnh" ra "v-sao-l-markdown-tnh", lệch hoàn toàn với
+  //     rehype-slug và mọi anchor gãy.
+  //  2. Đọc id từ DOM trong useEffect — id thì đúng, nhưng mục lục xuất hiện
+  //     sau lần paint đầu. Trên mobile nó nằm trên nội dung (order: -1) nên
+  //     đẩy cả bài xuống: CLS 0.39.
+  //
+  // Dùng thẳng github-slugger — đúng thư viện rehype-slug dùng bên trong — thì
+  // slug chắc chắn khớp mà không phải chờ DOM. Slugger có trạng thái để xử lý
+  // tiêu đề trùng tên, nên phải tạo instance mới cho mỗi bài.
+  const headings = useMemo<Heading[]>(() => {
+    if (!writeup) return [];
 
-  // Mục lục đọc từ DOM đã render chứ không parse lại Markdown.
-  // Bản trước tự viết slugify và lệch với rehype-slug: hàm đó strip mọi ký tự
-  // ngoài [\w\s-] nên "Vì sao là Markdown tĩnh" thành "v-sao-l-markdown-tnh",
-  // còn rehype-slug (github-slugger) giữ nguyên Unicode. Mọi anchor đều gãy.
-  // Lấy từ DOM thì không thể lệch, vì đó chính là id thật.
-  useEffect(() => {
-    const root = bodyRef.current;
-    if (!root) return;
-    const found = Array.from(root.querySelectorAll<HTMLElement>('h2[id], h3[id]')).map(
-      (el) => ({
-        id: el.id,
-        text: el.textContent ?? '',
-        level: el.tagName === 'H2' ? 2 : 3,
-      })
-    );
-    setHeadings(found);
+    const slugger = new GithubSlugger();
+    const found: Heading[] = [];
+    let inFence = false;
+
+    for (const line of writeup.body.split('\n')) {
+      // Bỏ qua phần trong code block, nếu không thì comment kiểu `## foo`
+      // trong code sẽ lọt vào mục lục.
+      if (/^\s*```/.test(line)) {
+        inFence = !inFence;
+        continue;
+      }
+      if (inFence) continue;
+
+      const m = /^(#{2,3})\s+(.+?)\s*$/.exec(line);
+      if (!m) continue;
+      const text = m[2].replace(/`/g, '');
+      found.push({ id: slugger.slug(text), text, level: m[1].length });
+    }
+
+    return found;
   }, [writeup]);
 
   const { prev, next } = useMemo(() => {
@@ -148,7 +166,7 @@ export default function WriteupDetail() {
       </header>
 
       <div className="writeup__layout">
-        <article ref={bodyRef} className="writeup__body md">
+        <article className="writeup__body md">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             rehypePlugins={[rehypeSlug, rehypeHighlightLite]}

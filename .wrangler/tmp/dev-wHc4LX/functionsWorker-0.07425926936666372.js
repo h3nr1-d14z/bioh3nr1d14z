@@ -1,7 +1,7 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 
-// .wrangler/tmp/bundle-rEKxKe/checked-fetch.js
+// .wrangler/tmp/bundle-MBlUNh/checked-fetch.js
 var urls = /* @__PURE__ */ new Set();
 function checkURL(request, init) {
   const url = request instanceof URL ? request : new URL(
@@ -27,7 +27,7 @@ globalThis.fetch = new Proxy(globalThis.fetch, {
   }
 });
 
-// .wrangler/tmp/pages-amks63/functionsWorker-0.38385277549009444.mjs
+// .wrangler/tmp/pages-Jg2oHQ/functionsWorker-0.07425926936666372.mjs
 var __defProp2 = Object.defineProperty;
 var __name2 = /* @__PURE__ */ __name((target, value) => __defProp2(target, "name", { value, configurable: true }), "__name");
 var urls2 = /* @__PURE__ */ new Set();
@@ -55,6 +55,46 @@ globalThis.fetch = new Proxy(globalThis.fetch, {
     return Reflect.apply(target, thisArg, argArray);
   }
 });
+var ALLOWED_HOSTS = /* @__PURE__ */ new Set([
+  "cdn.discordapp.com",
+  "media.discordapp.net",
+  // Album art Spotify do Lanyard trả về.
+  "i.scdn.co"
+]);
+var CACHE_SECONDS = 3600;
+var onRequestGet = /* @__PURE__ */ __name2(async (context) => {
+  const target = new URL(context.request.url).searchParams.get("url");
+  if (!target) {
+    return new Response("Thi\u1EBFu tham s\u1ED1 url", { status: 400 });
+  }
+  let parsed;
+  try {
+    parsed = new URL(target);
+  } catch {
+    return new Response("URL kh\xF4ng h\u1EE3p l\u1EC7", { status: 400 });
+  }
+  if (parsed.protocol !== "https:" || !ALLOWED_HOSTS.has(parsed.hostname)) {
+    return new Response("Host kh\xF4ng \u0111\u01B0\u1EE3c ph\xE9p", { status: 403 });
+  }
+  const upstream = await fetch(parsed.toString(), {
+    cf: { cacheTtl: CACHE_SECONDS, cacheEverything: true }
+  });
+  if (!upstream.ok) {
+    return new Response("Kh\xF4ng t\u1EA3i \u0111\u01B0\u1EE3c \u1EA3nh", { status: 502 });
+  }
+  const contentType = upstream.headers.get("Content-Type") ?? "image/png";
+  if (!contentType.startsWith("image/")) {
+    return new Response("Kh\xF4ng ph\u1EA3i \u1EA3nh", { status: 415 });
+  }
+  return new Response(upstream.body, {
+    status: 200,
+    headers: {
+      "Content-Type": contentType,
+      "Cache-Control": `public, max-age=${CACHE_SECONDS}, immutable`,
+      "Access-Control-Allow-Origin": "*"
+    }
+  });
+}, "onRequestGet");
 async function onRequestPost(context) {
   const { request, env } = context;
   try {
@@ -201,7 +241,7 @@ var JSON_HEADERS = {
   // Cache cạnh của Cloudflare, tính bằng giây.
   "Cache-Control": "public, max-age=300, stale-while-revalidate=1800"
 };
-var onRequestGet = /* @__PURE__ */ __name2(async (context) => {
+var onRequestGet2 = /* @__PURE__ */ __name2(async (context) => {
   const { env } = context;
   try {
     const cached = await env.VISITOR_KV.get(CACHE_KEY);
@@ -287,6 +327,13 @@ var onRequest = /* @__PURE__ */ __name2(async (context) => {
 }, "onRequest");
 var routes = [
   {
+    routePath: "/api/avatar",
+    mountPath: "/api",
+    method: "GET",
+    middlewares: [],
+    modules: [onRequestGet]
+  },
+  {
     routePath: "/api/contact",
     mountPath: "/api",
     method: "OPTIONS",
@@ -305,7 +352,7 @@ var routes = [
     mountPath: "/api",
     method: "GET",
     middlewares: [],
-    modules: [onRequestGet]
+    modules: [onRequestGet2]
   },
   {
     routePath: "/api/github",
@@ -987,7 +1034,7 @@ var jsonError2 = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx
 }, "jsonError");
 var middleware_miniflare3_json_error_default2 = jsonError2;
 
-// .wrangler/tmp/bundle-rEKxKe/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-MBlUNh/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__2 = [
   middleware_ensure_req_body_drained_default2,
   middleware_miniflare3_json_error_default2
@@ -1019,7 +1066,7 @@ function __facade_invoke__2(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__2, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-rEKxKe/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-MBlUNh/middleware-loader.entry.ts
 var __Facade_ScheduledController__2 = class ___Facade_ScheduledController__2 {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
@@ -1119,4 +1166,4 @@ export {
   __INTERNAL_WRANGLER_MIDDLEWARE__2 as __INTERNAL_WRANGLER_MIDDLEWARE__,
   middleware_loader_entry_default2 as default
 };
-//# sourceMappingURL=functionsWorker-0.38385277549009444.js.map
+//# sourceMappingURL=functionsWorker-0.07425926936666372.js.map

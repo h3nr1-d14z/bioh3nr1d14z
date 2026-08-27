@@ -23,6 +23,15 @@ const VERB: Record<number, string> = {
 };
 
 /**
+ * Mọi ảnh từ CDN Discord đi qua /api/avatar. Nạp trực tiếp thì Cloudflare của
+ * Discord đặt cookie `__cf_bm` lên trình duyệt khách — cookie bên thứ ba mà
+ * khách không hề chọn.
+ */
+function proxied(url: string): string {
+  return `/api/avatar?url=${encodeURIComponent(url)}`;
+}
+
+/**
  * Ảnh asset của Rich Presence có hai dạng: id asset của ứng dụng, hoặc ảnh
  * ngoài đã được Discord proxy với tiền tố `mp:`.
  */
@@ -30,10 +39,12 @@ function assetUrl(activity: LanyardActivity): string | null {
   const image = activity.assets?.large_image;
   if (!image) return null;
   if (image.startsWith('mp:')) {
-    return `https://media.discordapp.net/${image.slice(3)}`;
+    return proxied(`https://media.discordapp.net/${image.slice(3)}`);
   }
   if (!activity.application_id) return null;
-  return `https://cdn.discordapp.com/app-assets/${activity.application_id}/${image}.png`;
+  return proxied(
+    `https://cdn.discordapp.com/app-assets/${activity.application_id}/${image}.png`
+  );
 }
 
 function formatElapsed(ms: number): string {
@@ -75,11 +86,13 @@ export default function DiscordPresence() {
 
   const user = data.discord_user;
   const name = user.global_name || user.display_name || user.username;
-  const avatar = user.avatar
-    ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${
-        user.avatar.startsWith('a_') ? 'gif' : 'png'
-      }?size=128`
-    : `https://cdn.discordapp.com/embed/avatars/0.png`;
+  const avatar = proxied(
+    user.avatar
+      ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${
+          user.avatar.startsWith('a_') ? 'gif' : 'png'
+        }?size=128`
+      : 'https://cdn.discordapp.com/embed/avatars/0.png'
+  );
 
   const spotifyProgress = spotify
     ? Math.min(
@@ -145,7 +158,7 @@ export default function DiscordPresence() {
         <div className="presence__activity presence__activity--spotify">
           <img
             className="presence__art"
-            src={spotify.album_art_url}
+            src={proxied(spotify.album_art_url)}
             alt={`Album art for ${spotify.album}`}
             width={54}
             height={54}

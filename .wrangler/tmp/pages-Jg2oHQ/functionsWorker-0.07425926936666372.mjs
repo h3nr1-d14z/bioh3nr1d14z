@@ -1,7 +1,7 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 
-// ../.wrangler/tmp/bundle-GfxbNB/checked-fetch.js
+// ../.wrangler/tmp/bundle-nmgZHU/checked-fetch.js
 var urls = /* @__PURE__ */ new Set();
 function checkURL(request, init) {
   const url = request instanceof URL ? request : new URL(
@@ -26,6 +26,48 @@ globalThis.fetch = new Proxy(globalThis.fetch, {
     return Reflect.apply(target, thisArg, argArray);
   }
 });
+
+// api/avatar.ts
+var ALLOWED_HOSTS = /* @__PURE__ */ new Set([
+  "cdn.discordapp.com",
+  "media.discordapp.net",
+  // Album art Spotify do Lanyard trả về.
+  "i.scdn.co"
+]);
+var CACHE_SECONDS = 3600;
+var onRequestGet = /* @__PURE__ */ __name(async (context) => {
+  const target = new URL(context.request.url).searchParams.get("url");
+  if (!target) {
+    return new Response("Thi\u1EBFu tham s\u1ED1 url", { status: 400 });
+  }
+  let parsed;
+  try {
+    parsed = new URL(target);
+  } catch {
+    return new Response("URL kh\xF4ng h\u1EE3p l\u1EC7", { status: 400 });
+  }
+  if (parsed.protocol !== "https:" || !ALLOWED_HOSTS.has(parsed.hostname)) {
+    return new Response("Host kh\xF4ng \u0111\u01B0\u1EE3c ph\xE9p", { status: 403 });
+  }
+  const upstream = await fetch(parsed.toString(), {
+    cf: { cacheTtl: CACHE_SECONDS, cacheEverything: true }
+  });
+  if (!upstream.ok) {
+    return new Response("Kh\xF4ng t\u1EA3i \u0111\u01B0\u1EE3c \u1EA3nh", { status: 502 });
+  }
+  const contentType = upstream.headers.get("Content-Type") ?? "image/png";
+  if (!contentType.startsWith("image/")) {
+    return new Response("Kh\xF4ng ph\u1EA3i \u1EA3nh", { status: 415 });
+  }
+  return new Response(upstream.body, {
+    status: 200,
+    headers: {
+      "Content-Type": contentType,
+      "Cache-Control": `public, max-age=${CACHE_SECONDS}, immutable`,
+      "Access-Control-Allow-Origin": "*"
+    }
+  });
+}, "onRequestGet");
 
 // api/contact.ts
 async function onRequestPost(context) {
@@ -169,7 +211,7 @@ var JSON_HEADERS = {
   // Cache cạnh của Cloudflare, tính bằng giây.
   "Cache-Control": "public, max-age=300, stale-while-revalidate=1800"
 };
-var onRequestGet = /* @__PURE__ */ __name(async (context) => {
+var onRequestGet2 = /* @__PURE__ */ __name(async (context) => {
   const { env } = context;
   try {
     const cached = await env.VISITOR_KV.get(CACHE_KEY);
@@ -256,8 +298,15 @@ var onRequest = /* @__PURE__ */ __name(async (context) => {
   );
 }, "onRequest");
 
-// ../.wrangler/tmp/pages-amks63/functionsRoutes-0.8162988685040196.mjs
+// ../.wrangler/tmp/pages-Jg2oHQ/functionsRoutes-0.43646012768976283.mjs
 var routes = [
+  {
+    routePath: "/api/avatar",
+    mountPath: "/api",
+    method: "GET",
+    middlewares: [],
+    modules: [onRequestGet]
+  },
   {
     routePath: "/api/contact",
     mountPath: "/api",
@@ -277,7 +326,7 @@ var routes = [
     mountPath: "/api",
     method: "GET",
     middlewares: [],
-    modules: [onRequestGet]
+    modules: [onRequestGet2]
   },
   {
     routePath: "/api/github",
@@ -782,7 +831,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// ../.wrangler/tmp/bundle-GfxbNB/middleware-insertion-facade.js
+// ../.wrangler/tmp/bundle-nmgZHU/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -814,7 +863,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// ../.wrangler/tmp/bundle-GfxbNB/middleware-loader.entry.ts
+// ../.wrangler/tmp/bundle-nmgZHU/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
@@ -914,4 +963,4 @@ export {
   __INTERNAL_WRANGLER_MIDDLEWARE__,
   middleware_loader_entry_default as default
 };
-//# sourceMappingURL=functionsWorker-0.38385277549009444.mjs.map
+//# sourceMappingURL=functionsWorker-0.07425926936666372.mjs.map
