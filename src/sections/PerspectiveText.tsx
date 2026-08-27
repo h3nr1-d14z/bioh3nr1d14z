@@ -8,13 +8,18 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function PerspectiveText() {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const wordsRef = useRef<HTMLSpanElement[]>([]);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
 
-    const words = wordsRef.current.filter(Boolean);
+    // Tìm từ trong effect thay vì giữ mảng ref: factory setWordRef tạo closure
+    // mới mỗi lần render (React gọi lại ref với null rồi phần tử), và đọc
+    // ref.current lúc render là thứ react-hooks/refs bắt lỗi. Cách này khớp
+    // với SkillsMatrix và GitHubActivity trong cùng repo.
+    const words = Array.from(
+      wrapper.querySelectorAll<HTMLSpanElement>('.perspective__word')
+    );
     if (words.length === 0) return;
 
     // Đây là hiệu ứng nặng nhất trang: pin màn hình 3000px và xoay chữ 720°.
@@ -76,28 +81,24 @@ export default function PerspectiveText() {
     };
   }, []);
 
-  const setWordRef = (index: number) => (el: HTMLSpanElement | null) => {
-    if (el) wordsRef.current[index] = el;
-  };
-
   return (
     <div ref={wrapperRef} className="perspective__wrapper" id="toolkit">
       <p className="perspective__text">
         <span className="perspective__word-wrap">
-          <span ref={setWordRef(0)} className="perspective__word">INFRASTRUCTURE</span>
+          <span className="perspective__word">INFRASTRUCTURE</span>
         </span>{' '}
         <span>TOOLS,</span>{' '}
         <span>GAME</span>{' '}
         <span className="perspective__word-wrap">
-          <span ref={setWordRef(1)} className="perspective__word">MODS,</span>
+          <span className="perspective__word">MODS,</span>
         </span>{' '}
         <span>AND THE</span>{' '}
         <span className="perspective__word-wrap">
-          <span ref={setWordRef(2)} className="perspective__word">OCCASIONAL</span>
+          <span className="perspective__word">OCCASIONAL</span>
         </span>{' '}
         <span>THING THAT PROBABLY</span>{' '}
         <span className="perspective__word-wrap">
-          <span ref={setWordRef(3)} className="perspective__word">SHOULDN&apos;T</span>
+          <span className="perspective__word">SHOULDN&apos;T</span>
         </span>{' '}
         <span>EXIST.</span>
       </p>
