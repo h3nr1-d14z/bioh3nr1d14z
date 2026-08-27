@@ -585,7 +585,9 @@
 .reveal__item {
   display: flex;
   width: 100%;
-  margin-bottom: 250px;
+  /* 250px x 6 dự án = 1500px khoảng trống thuần, tạo ra những khoảng trắng
+     500-700px không có gì trong lúc cuộn. 120px vẫn đủ tách các mục. */
+  margin-bottom: 120px;
   position: relative;
 }
 
@@ -1029,108 +1031,70 @@
   letter-spacing: 0.05em;
   color: #ffffff;
   text-align: center;
-  margin-bottom: 48px;
+  margin-bottom: 56px;
 }
 
 @media (max-width: 768px) {
   .skills__title {
     font-size: 24px;
+    margin-bottom: 36px;
   }
 }
 
-.skills__filters {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 48px;
-}
-
-.skills__filter-btn {
-  font-family: 'Geist Mono', monospace;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #9a9a9a;
-  background: transparent;
-  border: 1px solid #333333;
-  padding: 8px 20px;
-  cursor: pointer;
-  transition: all 0.3s ease-out;
-}
-
-.skills__filter-btn:hover {
-  border-color: #D4AF37;
-  color: #D4AF37;
-}
-
-.skills__filter-btn.active {
-  background: #D4AF37;
-  color: #1c1c1c;
-  border-color: #D4AF37;
-}
-
-.skills__grid {
-  max-width: 1000px;
+/* Nhóm kỹ năng dạng chip.
+   Bản trước là 20 thanh phần trăm tự chấm, cao 1402px và không nói lên điều
+   gì. Dạng chip theo nhóm gọn hơn ~3 lần và đọc lướt được ngay. */
+.skills__groups {
+  max-width: 1100px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 40px 56px;
+}
+
+.skills__group-title {
+  font-family: 'Geist Mono', monospace;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #D4AF37;
+  margin: 0 0 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+}
+
+.skills__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.skills__chip {
+  font-family: 'Geist Mono', monospace;
+  font-size: 13px;
+  color: #e6e6e6;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 7px 12px;
+  transition: border-color 0.25s ease-out, color 0.25s ease-out,
+    background-color 0.25s ease-out;
+}
+
+.skills__chip:hover {
+  color: #D4AF37;
+  border-color: rgba(212, 175, 55, 0.5);
+  background: rgba(212, 175, 55, 0.07);
 }
 
 @media (max-width: 768px) {
-  .skills__grid {
+  .skills__groups {
     grid-template-columns: 1fr;
+    gap: 32px;
   }
-}
-
-.skills__card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 8px;
-  padding: 20px;
-  transition: border-color 0.3s ease-out, background 0.3s ease-out;
-}
-
-.skills__card:hover {
-  border-color: rgba(212, 175, 55, 0.3);
-  background: rgba(212, 175, 55, 0.03);
-}
-
-.skills__card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.skills__name {
-  font-family: 'Geist Mono', monospace;
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #ffffff;
-}
-
-.skills__level {
-  font-family: 'Geist Mono', monospace;
-  font-size: 13px;
-  color: #D4AF37;
-}
-
-.skills__bar-bg {
-  width: 100%;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.skills__bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #D4AF37, #f0d78c);
-  border-radius: 2px;
-  transition: width 1s ease-out;
 }
 
 /* GitHub Activity */
@@ -1153,8 +1117,13 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: #1c1c1c;
-  text-align: center;
-  margin-bottom: 48px;
+  /* flex thay text-align: icon trước đây trôi hẳn ra mép trái vì
+     vertical-align không có tác dụng với phần tử căn giữa. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 32px;
 }
 
 @media (max-width: 768px) {
@@ -1169,6 +1138,70 @@
   color: #5f5f5f;
   text-align: center;
   margin-bottom: 24px;
+}
+
+/* Phân bổ ngôn ngữ — thay cho 20 thanh phần trăm tự chấm trước đây */
+.github__langs {
+  max-width: 1100px;
+  margin: 0 auto 40px;
+}
+
+.github__langs-bar {
+  display: flex;
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #dcdcdc;
+}
+
+.github__langs-seg {
+  height: 100%;
+  min-width: 2px;
+}
+
+.github__langs-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.github__langs-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 13px;
+  color: #3d3d3d;
+}
+
+.github__langs-share {
+  color: #5f5f5f;
+}
+
+.github__langs-note {
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  color: #5f5f5f;
+  margin: 14px 0 0;
+}
+
+.github__stat--pushed {
+  margin-left: auto;
+  color: #5f5f5f;
+}
+
+@media (max-width: 768px) {
+  .github__langs-legend {
+    gap: 6px 16px;
+  }
+
+  .github__stat--pushed {
+    margin-left: 0;
+  }
 }
 
 .github__grid {
@@ -1432,13 +1465,6 @@
   flex: 1;
 }
 
-.skills__card-wrap {
-  display: flex;
-}
-
-.skills__card-wrap .skills__card {
-  flex: 1;
-}
 
 /* Project Modal */
 .project-modal__overlay {

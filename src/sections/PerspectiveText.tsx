@@ -37,7 +37,10 @@ export default function PerspectiveText() {
       scrollTrigger: {
         trigger: wrapper,
         start: 'top top',
-        end: '+=3000',
+        // +=3000 nghĩa là phải cuộn 3900px — 4.3 màn hình, 31% toàn trang —
+        // chỉ để xem một câu xoay xong. 1400px vẫn đủ cho cả hai phase mà
+        // không biến section này thành đoạn đường phải lê qua.
+        end: '+=1400',
         scrub: 1.5,
         pin: true,
       },
