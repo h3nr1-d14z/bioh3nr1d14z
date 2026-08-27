@@ -1,17 +1,11 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { projects } from '../data/projects';
+import { featuredProjects } from '../data/projects';
 import type { Project } from '../data/projects';
 import { prefersReducedMotion } from '../lib/motion';
 
 gsap.registerPlugin(ScrollTrigger);
-
-const projectPairs: [Project, Project][] = [
-  [projects[2], projects[1]],   // OmniGraph, ai-redteam-toolkit
-  [projects[0], projects[3]],   // nat-gate, codeforces-minecraft
-  [projects[4], projects[5]],   // memviz, messenger-desktop
-];
 
 function createParallaxReveal(el: HTMLImageElement) {
   const wrapper = el.closest('.reveal__image-wrapper') as HTMLElement;
@@ -114,11 +108,13 @@ export default function ParallaxReveal({ onProjectClick }: ParallaxRevealProps) 
   return (
     <section className="reveal__section">
       <div className="reveal__wrapper">
-        {projectPairs.map((pair, pairIndex) => (
-          <div key={pairIndex}>
-            <ProjectItem project={pair[0]} reverse={pairIndex % 2 !== 0} onProjectClick={onProjectClick} />
-            <ProjectItem project={pair[1]} reverse={pairIndex % 2 === 0} onProjectClick={onProjectClick} />
-          </div>
+        {featuredProjects.map((project, index) => (
+          <ProjectItem
+            key={project.id}
+            project={project}
+            reverse={index % 2 !== 0}
+            onProjectClick={onProjectClick}
+          />
         ))}
       </div>
     </section>

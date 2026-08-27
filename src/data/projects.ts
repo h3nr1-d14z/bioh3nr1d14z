@@ -6,11 +6,18 @@ export interface Project {
   image: string;
   repo: string;
   highlights?: string[];
+  /**
+   * Dự án được trình bày sâu ở section reveal. Carousel vẫn hiện tất cả,
+   * nên đánh dấu ở đây chỉ quyết định cái nào được kể kỹ — tránh cùng 6 dự
+   * án xuất hiện 18 lần trên một trang.
+   */
+  featured?: boolean;
 }
 
 export const projects: Project[] = [
   {
     id: 'nat-gate',
+    featured: true,
     name: 'nat-gate',
     description: 'CLI tool for iptables port forwarding through Tailscale tunnels. Interactive TUI, multiple install methods, IPv4/IPv6, rate limiting.',
     tags: ['Rust', 'CLI', 'Networking', 'Tailscale'],
@@ -20,6 +27,7 @@ export const projects: Project[] = [
   },
   {
     id: 'ai-redteam-toolkit',
+    featured: true,
     name: 'ai-redteam-toolkit',
     description: 'AI-powered offensive security framework. 78 slash commands for pentest, red team, RE, game hacking, OSINT, forensics. Works with Claude Code & OpenCode.',
     tags: ['Python', 'Security', 'AI', 'Offensive'],
@@ -29,6 +37,7 @@ export const projects: Project[] = [
   },
   {
     id: 'omnigraph',
+    featured: true,
     name: 'OmniGraph',
     description: 'Distributed RAG-MCP server for AI code assistance: local-first, read-only, hybrid semantic + lexical search over Qdrant + Memgraph + Tree-sitter, with a Go file watcher and 4-tool MCP bridge to Claude Code.',
     tags: ['Python', 'Go', 'Qdrant', 'Memgraph'],
@@ -64,3 +73,6 @@ export const projects: Project[] = [
     highlights: ['Electron-based desktop wrapper', 'Native OS integrations', 'Custom UI enhancements', 'Cross-platform support'],
   },
 ];
+
+/** Dự án được kể kỹ ở section reveal, giữ nguyên thứ tự khai báo. */
+export const featuredProjects: Project[] = projects.filter((p) => p.featured);
