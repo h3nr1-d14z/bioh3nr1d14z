@@ -1,7 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { Activity } from 'lucide-react';
 
-const PING_INTERVAL_MS = 30_000;
+/**
+ * 45 giây, khớp với SESSION_TIMEOUT_MS 120 giây trong workers/presence —
+ * mỗi cửa sổ timeout có hai nhịp ping dự phòng, nên mất một nhịp không làm
+ * khách biến mất khỏi số đếm.
+ *
+ * Ở nhịp này mỗi tab tạo 80 request/giờ, tức khoảng 1.250 giờ-khách/ngày nằm
+ * trong hạn 100.000 request/ngày của Durable Objects ở gói free.
+ */
+const PING_INTERVAL_MS = 45_000;
 
 export default function VisitorCounter() {
   const [count, setCount] = useState<number | null>(null);

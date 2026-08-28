@@ -5,3 +5,12 @@ pages_build_output_dir = "dist"
 [[kv_namespaces]]
 id = "bbf3f6348c404fbc9459d7078f794a4f"
 binding = "VISITOR_KV"
+
+# Durable Object đếm người đang xem. Class nằm ở workers/presence vì Pages
+# Functions không tự khai báo Durable Object được — chỉ bind sang Worker khác
+# qua `script_name`. Deploy Worker đó bằng:
+#   npx wrangler deploy --config workers/presence/wrangler.toml
+[[durable_objects.bindings]]
+name = "PRESENCE"
+class_name = "PresenceCounter"
+script_name = "bioh3nr1d14z-presence"

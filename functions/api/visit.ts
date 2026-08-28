@@ -1,73 +1,84 @@
+/**
+ * Đếm số người đang xem.
+ *
+ * Trước đây endpoint này ghi cả danh sách session vào Workers KV ở MỖI lần
+ * ping (30 giây/lần cho mỗi tab đang mở). Điều đó vượt cả hai giới hạn KV
+ * cùng lúc: 1.000 ghi/ngày của gói free (mỗi tab tạo 120 ghi/giờ, nên chỉ
+ * khoảng 8 giờ-khách là khoá namespace), và 1 ghi/giây trên cùng một key —
+ * mọi khách đều ghi chung key `active_sessions`.
+ *
+ * Nay state nằm trong Durable Object `PresenceCounter`, hoàn toàn trong RAM.
+ * Không còn thao tác ghi nào, và cũng không còn tranh chấp cùng key vì Durable
+ * Object xử lý tuần tự theo từng object.
+ *
+ * DO được định nghĩa ở workers/presence và bind sang đây qua `script_name` —
+ * Pages Functions không tự khai báo Durable Object được.
+ */
+
+// Import kiểu (type-only) từ chính class DO thay vì khai lại interface: khai
+// lại thì thiếu brand DurableObjectBranded nên RPC không type được, và tệ hơn
+// là chữ ký có thể lệch khỏi implementation mà không ai biết. `import type`
+// bị xoá hoàn toàn lúc build nên không kéo code worker vào bundle Pages.
+import type { PresenceCounter } from '../../workers/presence/src/index';
+
 export interface Env {
-  VISITOR_KV: KVNamespace;
+  PRESENCE?: DurableObjectNamespace<PresenceCounter>;
 }
 
-const SESSION_KEY = 'active_sessions';
-const TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
+/**
+ * Toàn site dùng chung một object: "ai đang xem" là một con số duy nhất, nên
+ * đây thật sự là một điểm phối hợp chứ không phải nút thắt cổ chai do thiết kế.
+ */
+const OBJECT_NAME = 'global';
 
-interface Session {
-  id: string;
-  ts: number;
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+};
+
+function json(count: number | null): Response {
+  return new Response(JSON.stringify({ count }), {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-store',
+      ...CORS_HEADERS,
+    },
+  });
 }
+
+export const onRequestOptions: PagesFunction<Env> = async () =>
+  new Response(null, { status: 204, headers: CORS_HEADERS });
 
 export const onRequest: PagesFunction<Env> = async (context) => {
-  if (context.request.method === 'OPTIONS') {
-    return new Response(null, {
-      status: 204,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-      },
-    });
+  const { request, env } = context;
+
+  if (request.method === 'OPTIONS') {
+    return new Response(null, { status: 204, headers: CORS_HEADERS });
   }
 
-  let sessions: Session[] = [];
+  // Chưa bind DO (ví dụ bản preview chưa cấu hình) thì trả count: null để
+  // client tự ẩn widget, thay vì báo lỗi.
+  if (!env.PRESENCE) return json(null);
+
+  const stub = env.PRESENCE.getByName(OBJECT_NAME);
 
   try {
-    const stored = await context.env.VISITOR_KV.get(SESSION_KEY);
-    if (stored) {
-      sessions = JSON.parse(stored);
+    if (request.method !== 'POST') {
+      return json(await stub.count());
     }
+
+    let sessionId: string | undefined;
+    try {
+      sessionId = ((await request.json()) as { sessionId?: string }).sessionId;
+    } catch {
+      // Body hỏng thì coi như chỉ hỏi số đếm.
+    }
+
+    if (!sessionId) return json(await stub.count());
+    return json(await stub.touch(sessionId));
   } catch {
-    // ignore parse errors
+    return json(null);
   }
-
-  const now = Date.now();
-
-  // Remove expired sessions
-  sessions = sessions.filter((s) => now - s.ts < TIMEOUT_MS);
-
-  if (context.request.method === 'POST') {
-    try {
-      const body = (await context.request.json()) as { sessionId?: string };
-      const sessionId = body.sessionId || crypto.randomUUID();
-
-      const existingIndex = sessions.findIndex((s) => s.id === sessionId);
-      if (existingIndex >= 0) {
-        sessions[existingIndex].ts = now;
-      } else {
-        sessions.push({ id: sessionId, ts: now });
-      }
-    } catch {
-      // ignore body parse errors
-    }
-
-    try {
-      await context.env.VISITOR_KV.put(SESSION_KEY, JSON.stringify(sessions));
-    } catch {
-      // ignore write errors
-    }
-  }
-
-  return new Response(
-    JSON.stringify({ count: sessions.length }),
-    {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-    }
-  );
 };
